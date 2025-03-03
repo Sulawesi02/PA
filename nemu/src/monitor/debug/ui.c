@@ -38,6 +38,13 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+// static int cmd_p(char *args);
+// static int cmd_w(char *args);
+// static int cmd_d(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -48,7 +55,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  { "si", "Single step execution", cmd_si },
+  { "info", "Print program status", cmd_info },
+  { "x", "Scan memory", cmd_x },
+  // { "p", "Evaluate expression", cmd_p },
+  // { "w", "Set watchpoint", cmd_w },
+  // { "d", "Delete watchpoint", cmd_d },
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -73,6 +85,73 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
+  return 0;
+}
+
+// 单步执行
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  int steps = 1;  // 默认执行1步
+  
+  if (arg != NULL) {
+    steps = atoi(arg);
+    if (steps <= 0) {
+      printf("请输入有效的步数\n");
+      return 0;
+    }
+  }
+  cpu_exec(steps);
+  return 0;
+}
+
+// 打印程序状态
+static int cmd_info(char *args) {
+  char *arg = strtok(NULL, " ");
+  
+  if (arg == NULL) {
+    printf("请输入参数\n");
+    return 0;
+  }
+  
+  if (strcmp(arg, "r") == 0) {
+    for (int i = 0; i < 8; i++) {
+      printf("%s:0x%x\n", reg_name(i,4), reg_l(i));
+    }
+  } else if (strcmp(arg,"w") == 0){
+    print_watchpoints();// 打印所有监视点信息
+  } else{
+    printf("请输入有效的参数\n");
+  }
+
+  return 0;
+}
+
+// 扫描内存
+static int cmd_x(char *args) {
+  char *n = strtok(NULL, " ");
+  char *expr = strtok(NULL, " ");
+  
+  if (n == NULL || expr == NULL) {
+    printf("使用格式: x N EXPR\n");
+    return 0;
+  }
+  
+  int len = atoi(n);
+  if (len <= 0) {
+    printf("请输入有效的内存长度\n");
+    return 0;
+  }
+  
+  // 暂定 EXPR 中只能是一个十六进制数
+  vaddr_t addr = strtoul(expr, NULL, 16);
+  
+  for (int i = 0; i < len; i++) {
+    printf("0x%08x: ", addr + i * 4);
+    // 读取4字节内存
+    uint32_t data = vaddr_read(addr + i * 4, 4);
+    printf("0x%08x\n", data);
+  }
+  
   return 0;
 }
 
