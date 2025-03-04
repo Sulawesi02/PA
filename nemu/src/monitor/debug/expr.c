@@ -179,14 +179,14 @@ static int find_dominant_op(int p, int q) {
   int paren_level = 0;
 
   for (int i = p; i <= q; i++) {
-    if (tokens[i].type == '(') {
+    if (new_tokens[i].type == '(') {
       paren_level++;
       continue;
-    } else if (tokens[i].type == ')') {
+    } else if (new_tokens[i].type == ')') {
       paren_level--;
       continue;
-    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
-      int priority = get_priority(tokens[i].type);
+    } else if (paren_level == 0 && is_operator(new_tokens[i].type)) {
+      int priority = get_priority(new_tokens[i].type);
       if (priority < min_priority) {
         min_priority = priority;
         op_pos = i;
@@ -199,15 +199,15 @@ static int find_dominant_op(int p, int q) {
 
 // 检查表达式是否被一对匹配的括号包围
 static bool check_parentheses(int p, int q) {
-  if (tokens[p].type != '(' || tokens[q].type != ')') {
+  if (new_tokens[p].type != '(' || new_tokens[q].type != ')') {
     return false;
   }
 
   int paren_level = 0;
   for (int i = p; i <= q; i++) {
-    if (tokens[i].type == '(') {
+    if (new_tokens[i].type == '(') {
       paren_level++;
-    } else if (tokens[i].type == ')') {
+    } else if (new_tokens[i].type == ')') {
       paren_level--;
       if (paren_level == 0 && i != q) {
         return false;
