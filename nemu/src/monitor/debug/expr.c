@@ -262,7 +262,7 @@ static uint32_t eval(int p, int q, bool *success){
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
       // 处理负号，将其视为 0 - num
       uint32_t val1 = 0;
-      uint32_t val2 = eval(p + 1, q, &right_success);
+      uint32_t val2 = eval(op_pos + 1, q, &right_success);
       if (!right_success) {
         *success = false;
         return 0;
@@ -291,7 +291,7 @@ static uint32_t eval(int p, int q, bool *success){
           *success = false;
           return 0;
         }
-        return val1 / val2;
+        return (double)val1 / (double)val2;
       }
       case TK_EQ: return val1 == val2;
       case TK_NEQ: return val1 != val2;
