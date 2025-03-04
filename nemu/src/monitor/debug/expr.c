@@ -261,7 +261,10 @@ static uint32_t eval(int p, int q, bool *success){
     if (!left_success || !right_success) {
       *success = false;
       return 0;
+    } else{
+      *success = true;
     }
+
 
     switch (tokens[op_pos].type) {
       case '+': return val1 + val2;
