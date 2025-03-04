@@ -163,23 +163,26 @@ static bool is_operator(int type) {
 }
 
 // 检查表达式是否被一对匹配的括号包围
-bool check_parentheses(int l,int r){
-  if(tokens[l].type!='(' || tokens[r].type!=')'){
+static bool check_parentheses(int p, int q) {
+  if (tokens[p].type != '(' || tokens[q].type != ')') {
     return false;
   }
-  int cnt=0;
-  for(int i=l;i<=r;++i){
-    if(tokens[i].type=='(')cnt++;
-    else if(tokens[i].type==')'){
-      if(cnt>0)cnt--;
-      else return false;
-    }
-    else if(cnt==0&&(tokens[i].type=='+'||tokens[i].type=='-'||tokens[i].type=='*'||tokens[i].type=='/'||tokens[i].type==TK_AND||tokens[i].type==TK_OR||tokens[i].type==TK_EQ||tokens[i].type==TK_NEQ)){
+
+  int paren_level = 0;
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == '(') {
+      paren_level++;
+    } else if (tokens[i].type == ')') {
+      if (paren_level == 0) {
+        return false;
+      }
+      paren_level--;
+    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
       return false;
     }
   }
-  if(cnt==0)return true;
-  return false;
+
+  return true;
 }
 
 // 找到表达式中的主运算符（优先级最低的运算符）
