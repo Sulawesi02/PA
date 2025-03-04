@@ -287,6 +287,7 @@ static double eval(int p, int q, bool *success){
   else {
     bool right_success;
     double val;
+    printf("单目运算符");
 
     switch (tokens[p].type) {
       case '-': // 一元负号
