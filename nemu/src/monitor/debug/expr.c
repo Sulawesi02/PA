@@ -163,29 +163,23 @@ static bool is_operator(int type) {
 }
 
 // 检查表达式是否被一对匹配的括号包围
-static bool check_parentheses(int p, int q) {
-  if (tokens[p].type != '(' || tokens[q].type != ')') {
+bool check_parentheses(int l,int r){
+  if(tokens[l].type!='(' || tokens[r].type!=')'){
     return false;
   }
-  printf("111\n");
-
-  int paren_level = 0;
-  for (int i = p; i <= q; i++) {
-    if (tokens[i].type == '(') {
-      paren_level++;
-    } else if (tokens[i].type == ')') {
-      if (paren_level == 0) {
-        return false;
-      }
-      paren_level--;
-    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
-      printf("222\n");
+  int cnt=0;
+  for(int i=l;i<=r;++i){
+    if(tokens[i].type=='(')cnt++;
+    else if(tokens[i].type==')'){
+      if(cnt>0)cnt--;
+      else return false;
+    }
+    else if(cnt==0&&(tokens[i].type=='+'||tokens[i].type=='-'||tokens[i].type=='*'||tokens[i].type=='/'||tokens[i].type==TK_AND||tokens[i].type==TK_OR||tokens[i].type==TK_EQ||tokens[i].type==TK_NEQ)){
       return false;
     }
   }
-
-  printf("333\n");
-  return true;
+  if(cnt==0)return true;
+  return false;
 }
 
 // 找到表达式中的主运算符（优先级最低的运算符）
