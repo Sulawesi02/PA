@@ -325,6 +325,9 @@ static double eval(int p, int q, bool *success){
 }
 
 double expr(char *e, bool *success) {
+  memset(tokens, 0, sizeof(tokens));
+  memset(new_tokens, 0, sizeof(new_tokens));
+
   if (!make_token(e)) {
     *success = false;
     return 0;
