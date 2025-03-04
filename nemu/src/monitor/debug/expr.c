@@ -7,6 +7,8 @@
 #include <regex.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 // 词法单元类型枚举
 enum {
@@ -79,7 +81,9 @@ typedef struct token {
 } Token;
 
 Token tokens[32];
+Token new_tokens[32];
 int nr_token;
+int new_nr_token;
 
 // 词法分析
 static bool make_token(char *e) {
@@ -182,14 +186,6 @@ static int find_dominant_op(int p, int q) {
       paren_level--;
       continue;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
-      if (tokens[i].type == '-' && (i == p || is_operator(tokens[i - 1].type) || tokens[op_pos - 1].type == '(')) {
-        // 跳过连续的负号
-        while (i + 1 <= q && tokens[i + 1].type == '-' && is_operator(tokens[i].type)) {
-          i++;
-        }
-        continue;
-      }
-
       int priority = get_priority(tokens[i].type);
       if (priority < min_priority) {
         min_priority = priority;
@@ -222,6 +218,33 @@ static bool check_parentheses(int p, int q) {
   return true;
 }
 
+// 处理负号
+static void handle_negative(){
+  for (int i = 0, j = 0; i < nr_token; i++,j++) {
+      if (tokens[i].type == '-' && (i == 0 || is_operator(tokens[i - 1].type) || tokens[i - 1].type == '(')) {
+          int negative_count = 0;
+          // 统计连续负号的数量
+          while (i < nr_token && tokens[i].type == '-') {
+              negative_count++;
+              i++;
+          }
+          if (negative_count % 2 == 1) {
+              // 奇数个负号，保留一个负号
+              new_tokens[j].type = tokens[i].type;
+              sprintf(new_tokens[j].str, "-%s", tokens[i].str);
+              new_nr_token++;
+          } else{
+              // 偶数个负号，不添加负号
+              new_tokens[j] = tokens[i];
+              new_nr_token++;
+        }
+      } else {
+          new_tokens[j] = tokens[i];
+          new_nr_token++;
+      }
+  }
+}
+
 // 语法分析
 static double eval(int p, int q, bool *success){
   if(p > q) {
@@ -230,16 +253,16 @@ static double eval(int p, int q, bool *success){
   }
   else if(p == q) {
     *success = true;
-    switch (tokens[p].type){
+    switch (new_tokens[p].type){
       case TK_DEC:
       case TK_HEX:
-        return strtod(tokens[p].str, NULL);
+        return strtod(new_tokens[p].str, NULL);
       case TK_REG:{
-        if(strcmp(&tokens[p].str[1], "eip") == 0) {
+        if(strcmp(&new_tokens[p].str[1], "eip") == 0) {
           return cpu.eip;
         }
         for(int i = 0; i < 8; i++) {
-          if(strcmp(&tokens[p].str[1], reg_name(i,4)) == 0) {
+          if(strcmp(&new_tokens[p].str[1], reg_name(i,4)) == 0) {
             return reg_l(i);
           }
         }
@@ -265,18 +288,6 @@ static double eval(int p, int q, bool *success){
     }
 
     bool left_success, right_success = false;
-
-    if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
-      // 处理负号
-      double val2 = eval(op_pos + 1, q, &right_success);
-      if (!right_success) {
-        *success = false;
-        return 0;
-      }
-      *success = true;
-      return -val2;
-    }
-
     double val1 = eval(p, op_pos - 1, &left_success);
     double val2 = eval(op_pos + 1, q, &right_success);
     
@@ -288,7 +299,7 @@ static double eval(int p, int q, bool *success){
       return 0;
     } 
     *success = true;
-    switch (tokens[op_pos].type) {
+    switch (new_tokens[op_pos].type) {
       case '+': return val1 + val2;
       case '-': return val1 - val2;
       case '*': return val1 * val2;
@@ -320,12 +331,19 @@ double expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  for(int i = 0; i < nr_token; i++) {
+
+  // 处理负号
+  handle_negative();
+  for(int i = 0; i < new_nr_token; i++) {
+    printf("new_tokens[%d]: type = %d, str = %s\n", i, new_tokens[i].type, new_tokens[i].str);
+  }
+
+  for(int i = 0; i < new_nr_token; i++) {
     // 如果 * 是表达式的第一个 token 或者 * 前面是一个运算符，则 * 是解引用运算符
-    if(tokens[i].type == '*' && (i == 0 || is_operator(tokens[i - 1].type))) {
-      tokens[i].type = TK_DEREF;
+    if(new_tokens[i].type == '*' && (i == 0 || is_operator(new_tokens[i - 1].type))) {
+      new_tokens[i].type = TK_DEREF;
     }
   }
 
-  return eval(0, nr_token - 1, success);
+  return eval(0, new_nr_token - 1, success);
 }
