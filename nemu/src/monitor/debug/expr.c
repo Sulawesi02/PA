@@ -206,6 +206,8 @@ static bool check_parentheses(int p, int q) {
         return false;
       }
       paren_level--;
+    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      return false;
     }
   }
 
