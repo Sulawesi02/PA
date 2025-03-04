@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
+// 词法单元类型枚举
 enum {
   TK_NOTYPE = 256, // 空格串
   TK_EQ,       // ==
@@ -17,13 +18,13 @@ enum {
   TK_AND,      // &&
   TK_OR,       // ||
   TK_NOT,      // !
-  TK_NUM,      // 十进制数
+  TK_DEC,      // 十进制数
   TK_HEX,      // 十六进制数
   TK_REG,      // 寄存器
   TK_DEREF     // 解引用
-
 };
 
+// 正则表达式规则数组
 static struct rule {
   char *regex;
   int token_type;
@@ -43,7 +44,7 @@ static struct rule {
   {"&&", TK_AND},       // and
   {"\\|\\|", TK_OR},    // or
   {"!", TK_NOT},        // not
-  {"[0-9]|([1-9][0-9]*)", TK_NUM},   // num
+  {"[0-9]|([1-9][0-9]*)", TK_DEC},   // dec
   {"0[xX][0-9a-fA-F]+", TK_HEX},     // hex
   {"\\$[eE][0-9a-zA-Z]{2}", TK_REG}, // reg
   {"\\*\\([a-zA-Z0-9]+\\)", TK_DEREF}, // deref
@@ -106,7 +107,7 @@ static bool make_token(char *e) {
 
         switch (rules[i].token_type) {
           case TK_NOTYPE: break;
-          case TK_NUM:
+          case TK_DEC:
           case TK_HEX:
           case TK_REG:{
             strncpy(tokens[nr_token].str, substr_start, substr_len);
@@ -222,7 +223,7 @@ static uint32_t eval(int p, int q, bool *success){
   else if(p == q) {
     *success = true;
     switch (tokens[p].type){
-      case TK_NUM:
+      case TK_DEC:
         return strtoul(tokens[p].str, NULL, 10);
       case TK_HEX:
         return strtoul(tokens[p].str, NULL, 16);
@@ -249,44 +250,61 @@ static uint32_t eval(int p, int q, bool *success){
   else {
     int op_pos = find_dominant_op(p, q);
 
-    printf("expr: op_pos = %d\n", op_pos);
-    
+    // printf("expr: op_pos = %d\n", op_pos);
+
     if (op_pos == -1) {
       *success = false;
       return 0;
     }
 
     bool left_success, right_success = false;
-    uint32_t val1 = eval(p, op_pos - 1, &left_success);
-    uint32_t val2 = eval(op_pos + 1, q, &right_success);
+    uint32_t val1 = 0;
+    uint32_t val2 = 0;
 
-    // printf("expr: val1 = %u, success = %d\n", val1, left_success);
-    // printf("expr: val2 = %u, success = %d\n", val2, right_success);
-
-    if (!left_success || !right_success) {
-      *success = false;
-      return 0;
-    } else{
-      *success = true;
-    }
-
-    switch (tokens[op_pos].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
-      case '/': {
-        if (val2 == 0) {
+    if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
+      // 处理负号
+      val2 = eval(op_pos + 1, q, &right_success);
+      if (!right_success) {
           *success = false;
           return 0;
-        }
-        return val1 / val2;
       }
-      case TK_DEREF: {
-        return vaddr_read(val1, 4);
-      }
-      default:
+      return -val2;
+    } else {
+      val1 = eval(p, op_pos - 1, &left_success);
+      val2 = eval(op_pos + 1, q, &right_success);
+
+      // printf("expr: val1 = %u, success = %d\n", val1, left_success);
+      // printf("expr: val2 = %u, success = %d\n", val2, right_success);
+
+      if (!left_success || !right_success) {
         *success = false;
         return 0;
+      } else{
+        *success = true;
+      }
+
+      switch (tokens[op_pos].type) {
+        case '+': return val1 + val2;
+        case '-': return val1 - val2;
+        case '*': return val1 * val2;
+        case '/': {
+          if (val2 == 0) {
+            *success = false;
+            return 0;
+          }
+          return val1 / val2;
+        }
+        case TK_EQ: return val1 == val2;
+        case TK_NEQ: return val1 != val2;
+        case TK_AND: return val1 && val2;
+        case TK_OR: return val1 || val2;
+        case TK_DEREF: {
+          return vaddr_read(val1, 4);
+        }
+        default:
+          *success = false;
+          return 0;
+      }
     }
   }
 }
