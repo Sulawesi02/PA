@@ -5,11 +5,22 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <limits.h>
+#include <stdlib.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, // 空格串
+  TK_EQ,       // ==
 
   /* TODO: Add more token types */
+  TK_NEQ,      // !=
+  TK_AND,      // &&
+  TK_OR,       // ||
+  TK_NOT,      // !
+  TK_NUM,      // 十进制数
+  TK_HEX,      // 十六进制数
+  TK_REG,      // 寄存器
+  TK_DEREF     // 解引用
 
 };
 
@@ -24,7 +35,20 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\-", '-'},         // sub
+  {"\\*", '*'},         // mul
+  {"\\/", '/'},         // div
+  {"==", TK_EQ},        // eq
+  {"!=", TK_NEQ},       // neq
+  {"&&", TK_AND},       // and
+  {"\\|\\|", TK_OR},    // or
+  {"!", TK_NOT},        // not
+  {"[0-9]|([1-9][0-9]*)", TK_NUM},   // num
+  {"0[xX][0-9a-fA-F]+", TK_HEX},     // hex
+  {"\\$[eE][0-9a-zA-Z]{2}", TK_REG}, // reg
+  {"\\*\\([a-zA-Z0-9]+\\)", TK_DEREF}, // deref
+  {"\\(", '('},         //left parentheses
+  {"\\)", ')'},         //right parentheses
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -80,7 +104,17 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NOTYPE: break;
+          case TK_NUM:
+          case TK_HEX:
+          case TK_REG:{
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0';
+          }
+          default: {
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+          }
         }
 
         break;
@@ -96,6 +130,153 @@ static bool make_token(char *e) {
   return true;
 }
 
+// 获取运算符优先级
+static int get_priority(int type) {
+  switch (type) {
+    case TK_OR:{
+      return 1;
+    }
+    case TK_AND:{
+      return 2;
+    }
+    case TK_EQ:
+    case TK_NEQ:{
+      return 3;
+    }
+    case '+':
+    case '-':
+      return 4;
+    case '*':
+    case '/':
+      return 5;
+    case TK_DEREF:
+    case TK_NOT:{
+      return 6;
+    }
+    default:
+      return INT_MAX;
+  }
+}
+
+static bool is_operator(int type) {
+  return get_priority(type) <= 6;
+}
+
+// 找到表达式中的主运算符（优先级最低的运算符）
+static int find_dominant_op(int p, int q) {
+  int op_pos = -1;
+  int min_priority = INT_MAX;
+  int paren_level = 0;
+
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == '(') {
+      paren_level++;
+      continue;
+    } else if (tokens[i].type == ')') {
+      paren_level--;
+      continue;
+    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      int priority = get_priority(tokens[i].type);
+      if (priority < min_priority) {
+        min_priority = priority;
+        op_pos = i;
+      }
+    } 
+  }
+
+  return op_pos;
+}
+
+// 检查表达式是否被一对匹配的括号包围
+static bool check_parentheses(int p, int q) {
+  if (tokens[p].type != '(' || tokens[q].type != ')') {
+    return false;
+  }
+
+  int paren_level = 0;
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == '(') {
+      paren_level++;
+    } else if (tokens[i].type == ')') {
+      paren_level--;
+      if (paren_level == 0 && i != q) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+static uint32_t eval(int p, int q, bool *success){
+  if(p > q) {
+    *success = false;
+    return 0;
+  }
+  else if(p == q) {
+    *success = true;
+    switch (tokens[p].type){
+      case TK_NUM:
+        return strtoul(tokens[p].str, NULL, 10);
+      case TK_HEX:
+        return strtoul(tokens[p].str, NULL, 16);
+      case TK_REG:{
+        if(strcmp(&tokens[p].str[1], "eip") == 0) {
+          return cpu.eip;
+        }
+        for(int i = 0; i < 8; i++) {
+          if(strcmp(&tokens[p].str[1], reg_name(i,4)) == 0) {
+            return reg_l(i);
+          }
+        }
+        *success = false;
+        return 0;
+      }
+      default:
+        *success = false;
+        return 0;
+      }
+  }
+  else if(check_parentheses(p, q)) {
+    return eval(p + 1, q - 1, success);
+  }
+  else {
+    int op_pos = find_dominant_op(p, q);
+    if (op_pos == -1) {
+      *success = false;
+      return 0;
+    }
+
+    bool left_success, right_success;
+    uint32_t val1 = eval(p, op_pos - 1, &left_success);
+    uint32_t val2 = eval(op_pos + 1, q, &right_success);
+
+    if (!left_success || !right_success) {
+      *success = false;
+      return 0;
+    }
+
+    switch (tokens[op_pos].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': {
+        if (val2 == 0) {
+          *success = false;
+          return 0;
+        }
+        return val1 / val2;
+      }
+      case TK_DEREF: {
+        return vaddr_read(val1, 4);
+      }
+      default:
+        *success = false;
+        return 0;
+    }
+  }
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -103,7 +284,12 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  for(int i = 0; i < nr_token; i++) {
+    // 如果 * 是表达式的第一个 token 或者 * 前面是一个运算符，则 * 是解引用运算符
+    if(tokens[i].type == '*' && (i == 0 || is_operator(tokens[i - 1].type))) {
+      tokens[i].type = TK_DEREF;
+    }
+  }
 
-  return 0;
+  return eval(0, nr_token - 1, success);
 }
