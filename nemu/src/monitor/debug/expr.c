@@ -80,6 +80,7 @@ typedef struct token {
 Token tokens[32];
 int nr_token;
 
+// 词法分析
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -212,6 +213,7 @@ static bool check_parentheses(int p, int q) {
   return true;
 }
 
+// 语法分析
 static uint32_t eval(int p, int q, bool *success){
   if(p > q) {
     *success = false;
@@ -246,6 +248,9 @@ static uint32_t eval(int p, int q, bool *success){
   }
   else {
     int op_pos = find_dominant_op(p, q);
+
+    printf("expr: op_pos = %d\n", op_pos);
+    
     if (op_pos == -1) {
       *success = false;
       return 0;
