@@ -42,8 +42,8 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
-// static int cmd_w(char *args);
-// static int cmd_d(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 
 static struct {
   char *name;
@@ -59,8 +59,8 @@ static struct {
   { "info", "Print program status", cmd_info },
   { "x", "Scan memory", cmd_x },
   { "p", "Evaluate expression", cmd_p },
-  // { "w", "Set watchpoint", cmd_w },
-  // { "d", "Delete watchpoint", cmd_d },
+  { "w", "Set watchpoint", cmd_w },
+  { "d", "Delete watchpoint", cmd_d },
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -117,6 +117,13 @@ static int cmd_info(char *args) {
     for (int i = 0; i < 8; i++) {
       printf("%s:0x%x\n", reg_name(i,4), reg_l(i));
     }
+    for (int i = 0; i < 8; i++) {
+      printf("%s:0x%x\n", reg_name(i,2), reg_w(i));
+    }
+    for (int i = 0; i < 8; i++) {
+      printf("%s:0x%x\n", reg_name(i,1), reg_b(i));
+    }
+    printf("eip:0x%x\n", cpu.eip);
   } else if (strcmp(arg,"w") == 0){
     print_watchpoints();// 打印所有监视点信息
   } else{
@@ -174,6 +181,28 @@ static int cmd_p(char *args) {
     printf("表达式求值失败\n");
   }
   
+  return 0;
+}
+
+// 设置监视点
+static int cmd_w(char *args) {
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    printf("请输入表达式\n");
+    return 0;
+  }
+  printf("表达式: %s\n", arg);
+  return 0;
+}
+
+// 删除监视点
+static int cmd_d(char *args) {
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    printf("请输入表达式\n");
+    return 0;
+  }
+  printf("表达式: %s\n", arg);
   return 0;
 }
 
