@@ -287,7 +287,7 @@ static double eval(int p, int q, bool *success){
       return 0;
     }
 
-    bool left_success, right_success = false;
+    bool left_success, right_success;
     double val1 = eval(p, op_pos - 1, &left_success);
     double val2 = eval(op_pos + 1, q, &right_success);
     
