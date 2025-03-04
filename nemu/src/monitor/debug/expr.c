@@ -183,7 +183,7 @@ static int find_dominant_op(int p, int q) {
       continue;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
       int priority = get_priority(tokens[i].type);
-      if (priority <= min_priority) {
+      if (priority < min_priority) {
         min_priority = priority;
         op_pos = i;
       }
@@ -273,8 +273,10 @@ static uint32_t eval(int p, int q, bool *success){
 
     uint32_t val1 = eval(p, op_pos - 1, &left_success);
     uint32_t val2 = eval(op_pos + 1, q, &right_success);
-    // printf("expr: val1 = %u, success = %d\n", val1, left_success);
-    // printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    
+    printf("expr: val1 = %u, success = %d\n", val1, left_success);
+    printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    
     if (!left_success || !right_success) {
       *success = false;
       return 0;
