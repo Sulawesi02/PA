@@ -222,23 +222,23 @@ static bool check_parentheses(int p, int q) {
 static void handle_negative(){
   for (int i = 0, j = 0; i < nr_token; i++,j++) {
       if (tokens[i].type == '-' && (i == 0 || is_operator(tokens[i - 1].type) || tokens[i - 1].type == '(')) {
-          int negative_count = 0;
-          // 统计连续负号的数量
-          while (i < nr_token && tokens[i].type == '-') {
-              negative_count++;
-              i++;
-          }
-          i--;
-          if (negative_count % 2 == 1) {
-              // 奇数个负号，保留一个负号
-              new_tokens[j].type = tokens[i].type;
-              sprintf(new_tokens[j].str, "-%s", tokens[i].str);
-              new_nr_token++;
-          } else{
-              // 偶数个负号，不添加负号
-              new_tokens[j] = tokens[i];
-              new_nr_token++;
+        int negative_count = 0;
+        // 统计连续负号的数量
+        while (i < nr_token && tokens[i].type == '-') {
+          negative_count++;
+          i++;
         }
+        if (negative_count % 2 == 1) {
+          // 奇数个负号，保留一个负号
+          new_tokens[j].type = tokens[i].type;
+          sprintf(new_tokens[j].str, "-%s", tokens[i].str);
+          new_nr_token++;
+        } else{
+          // 偶数个负号，不添加负号
+          new_tokens[j] = tokens[i];
+          new_nr_token++;
+        }
+        i--;
       } else {
           new_tokens[j] = tokens[i];
           new_nr_token++;
