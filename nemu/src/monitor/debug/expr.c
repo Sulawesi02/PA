@@ -249,6 +249,10 @@ static double eval(int p, int q, bool *success){
     printf("expr: op_pos = %d\n", op_pos);
 
     if (op_pos == -1) {
+      if (tokens[p].type == '-'){
+        return -eval(p + 1, q, success);
+      }
+
       *success = false;
       return 0;
     }
@@ -260,13 +264,6 @@ static double eval(int p, int q, bool *success){
     printf("expr: val1 = %f, success = %d\n", val1, left_success);
     printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
-    if (tokens[p].type == '-')
-        if (!right_success) {
-          *success = false;
-          return 0;
-        }
-        *success = true;
-        return -val2;
     if (tokens[op_pos].type == TK_NOT){
         if (!right_success) {
           *success = false;
