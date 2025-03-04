@@ -250,7 +250,7 @@ static uint32_t eval(int p, int q, bool *success){
   else {
     int op_pos = find_dominant_op(p, q);
 
-    // printf("expr: op_pos = %d\n", op_pos);
+    printf("expr: op_pos = %d\n", op_pos);
 
     if (op_pos == -1) {
       *success = false;
@@ -262,6 +262,9 @@ static uint32_t eval(int p, int q, bool *success){
     uint32_t val2 = 0;
 
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
+
+      printf("处理负号\n");
+      
       // 处理负号
       val2 = eval(op_pos + 1, q, &right_success);
       if (!right_success) {
