@@ -257,52 +257,50 @@ static uint32_t eval(int p, int q, bool *success){
       return 0;
     }
 
+    bool left_success, right_success = false;
+
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
-      // 处理负号
-      bool right_success;
-      uint32_t val = eval(op_pos + 1, q, &right_success);
-      if (!right_success) {
-          *success = false;
-          return 0;
-      }
-      *success = true;
-      return -val;
-    } else {
-      bool left_success, right_success = false;
-      uint32_t val1 = eval(p, op_pos - 1, &left_success);
+      // 处理负号，将其视为 0 - num
+      uint32_t val1 = 0;
       uint32_t val2 = eval(op_pos + 1, q, &right_success);
-
-      printf("expr: val1 = %u, success = %d\n", val1, left_success);
-      printf("expr: val2 = %u, success = %d\n", val2, right_success);
-
-      if (!left_success || !right_success) {
+      if (!right_success) {
         *success = false;
         return 0;
-      } 
+      }
       *success = true;
+      return val1 - val2;
+    }
 
-      switch (tokens[op_pos].type) {
-        case '+': return val1 + val2;
-        case '-': return val1 - val2;
-        case '*': return val1 * val2;
-        case '/': {
-          if (val2 == 0) {
-            *success = false;
-            return 0;
-          }
-          return val1 / val2;
-        }
-        case TK_EQ: return val1 == val2;
-        case TK_NEQ: return val1 != val2;
-        case TK_AND: return val1 && val2;
-        case TK_OR: return val1 || val2;
-        case TK_DEREF: {
-          return vaddr_read(val1, 4);
-        }
-        default:
+    uint32_t val1 = eval(p, op_pos - 1, &left_success);
+    uint32_t val2 = eval(op_pos + 1, q, &right_success);
+    // printf("expr: val1 = %u, success = %d\n", val1, left_success);
+    // printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    if (!left_success || !right_success) {
+      *success = false;
+      return 0;
+    } 
+    *success = true;
+    switch (tokens[op_pos].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': {
+        if (val2 == 0) {
           *success = false;
           return 0;
+        }
+        return val1 / val2;
       }
+      case TK_EQ: return val1 == val2;
+      case TK_NEQ: return val1 != val2;
+      case TK_AND: return val1 && val2;
+      case TK_OR: return val1 || val2;
+      case TK_DEREF: {
+        return vaddr_read(val1, 4);
+      }
+      default:
+        *success = false;
+        return 0;
     }
   }
 }
