@@ -127,9 +127,9 @@ static bool make_token(char *e) {
     }
   }
 
-  for (int i = 0; i < nr_token; i++) {
-    printf("token[%d]: type = %d, str = %s\n", i, tokens[i].type, tokens[i].str);
-  }
+  // for (int i = 0; i < nr_token; i++) {
+  //   printf("token[%d]: type = %d, str = %s\n", i, tokens[i].type, tokens[i].str);
+  // }
 
   return true;
 }
@@ -255,8 +255,8 @@ static uint32_t eval(int p, int q, bool *success){
     uint32_t val1 = eval(p, op_pos - 1, &left_success);
     uint32_t val2 = eval(op_pos + 1, q, &right_success);
 
-    printf("expr: val1 = %u, success = %d\n", val1, left_success);
-    printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    // printf("expr: val1 = %u, success = %d\n", val1, left_success);
+    // printf("expr: val2 = %u, success = %d\n", val2, right_success);
 
     if (!left_success || !right_success) {
       *success = false;
@@ -264,7 +264,6 @@ static uint32_t eval(int p, int q, bool *success){
     } else{
       *success = true;
     }
-
 
     switch (tokens[op_pos].type) {
       case '+': return val1 + val2;
