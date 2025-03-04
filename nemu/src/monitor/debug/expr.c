@@ -198,16 +198,14 @@ static bool check_parentheses(int p, int q) {
   }
 
   int paren_level = 0;
-  for (int i = p; i <= q; i++) {
+  for (int i = p + 1; i < q; i++) {
     if (tokens[i].type == '(') {
       paren_level++;
     } else if (tokens[i].type == ')') {
-      if (paren_level == 0 && i != q) {
+      if (paren_level == 0) {
         return false;
       }
       paren_level--;
-    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
-      return false;
     }
   }
 
