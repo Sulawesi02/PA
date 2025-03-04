@@ -243,41 +243,7 @@ static double eval(int p, int q, bool *success){
   else if(check_parentheses(p, q)) {
     return eval(p + 1, q - 1, success);
   }
-  else if(tokens[p].type == '-' || tokens[p].type == TK_NOT || tokens[p].type == TK_DEREF) {
-    bool right_success;
-    double val;
-
-    switch (tokens[p].type) {
-      case '-': // 一元负号
-        val = eval(p + 1, q, &right_success);
-        if (!right_success) {
-          *success = false;
-          return 0;
-        }
-        *success = true;
-        return -val;
-      case TK_NOT: // 逻辑非
-        val = eval(p + 1, q, &right_success);
-        if (!right_success) {
-          *success = false;
-          return 0;
-        }
-        *success = true;
-        return !val;
-      case TK_DEREF: // 解引用
-        val = eval(p + 1, q, &right_success);
-        if (!right_success) {
-          *success = false;
-          return 0;
-        }
-        *success = true;
-        return vaddr_read((uint32_t)val, 4);
-      default:
-        *success = false;
-        return 0;
-    }
-  }
-  else {
+  else if(tokens[p].type != '-' || tokens[p].type != TK_NOT || tokens[p].type != TK_DEREF) {
     int op_pos = find_dominant_op(p, q);
 
     printf("expr: op_pos = %d\n", op_pos);
@@ -317,6 +283,41 @@ static double eval(int p, int q, bool *success){
         *success = false;
         return 0;
     }
+  }
+  else {
+    bool right_success;
+    double val;
+
+    switch (tokens[p].type) {
+      case '-': // 一元负号
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return -val;
+      case TK_NOT: // 逻辑非
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return !val;
+      case TK_DEREF: // 解引用
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return vaddr_read((uint32_t)val, 4);
+      default:
+        *success = false;
+        return 0;
+    }
+
   }
 }
 
