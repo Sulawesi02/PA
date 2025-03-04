@@ -202,10 +202,10 @@ static bool check_parentheses(int p, int q) {
     if (tokens[i].type == '(') {
       paren_level++;
     } else if (tokens[i].type == ')') {
-      paren_level--;
       if (paren_level == 0 && i != q) {
         return false;
       }
+      paren_level--;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
       return false;
     }
