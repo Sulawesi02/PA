@@ -257,24 +257,20 @@ static uint32_t eval(int p, int q, bool *success){
       return 0;
     }
 
-    bool left_success, right_success = false;
-    uint32_t val1 = 0;
-    uint32_t val2 = 0;
-
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
-
-      printf("处理负号\n");
-      
       // 处理负号
-      val2 = eval(op_pos + 1, q, &right_success);
+      bool right_success;
+      uint32_t val = eval(op_pos + 1, q, &right_success);
       if (!right_success) {
           *success = false;
           return 0;
       }
-      return -val2;
+      *success = true;
+      return -val;
     } else {
-      val1 = eval(p, op_pos - 1, &left_success);
-      val2 = eval(op_pos + 1, q, &right_success);
+      bool left_success, right_success = false;
+      uint32_t val1 = eval(p, op_pos - 1, &left_success);
+      uint32_t val2 = eval(op_pos + 1, q, &right_success);
 
       // printf("expr: val1 = %u, success = %d\n", val1, left_success);
       // printf("expr: val2 = %u, success = %d\n", val2, right_success);
