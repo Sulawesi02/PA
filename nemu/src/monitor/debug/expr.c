@@ -265,6 +265,7 @@ static double eval(int p, int q, bool *success){
     
     if (tokens[op_pos].type == TK_NOT) {
       if (right_success) {
+        *success = true;
         return !val2;
       } else {
         *success = false;
@@ -273,6 +274,7 @@ static double eval(int p, int q, bool *success){
     }
     if (tokens[op_pos].type == TK_DEREF) {
       if (right_success) {
+        *success = true;
         return vaddr_read(val2, 4);
       } else {
         *success = false;
