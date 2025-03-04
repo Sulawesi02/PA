@@ -91,14 +91,15 @@ static int cmd_help(char *args) {
 // 单步执行
 static int cmd_si(char *args) {
   char *arg = strtok(NULL, " ");
-  int steps = 1;  // 默认执行1步
-  
-  if (arg != NULL) {
-    steps = atoi(arg);
-    if (steps <= 0) {
-      printf("请输入有效的步数\n");
-      return 0;
-    }
+  if (arg == NULL) {
+    cpu_exec(1);
+    return 0;
+  } 
+
+  int steps = atoi(arg);
+  if (steps <= 0) {
+    printf("请输入有效的步数\n");
+    return 0;
   }
   cpu_exec(steps);
   return 0;
@@ -153,7 +154,7 @@ static int cmd_x(char *args) {
   vaddr_t addr = strtoul(expr, NULL, 16);
   
   for (int i = 0; i < len; i++) {
-    printf("0x%08x: 0x%08x\n", addr + i * 32, vaddr_read(addr + i * 32, 32));
+    printf("0x%08x: 0x%08x\n", addr + i * 4, vaddr_read(addr + i * 4, 4));
   }
   
   return 0;
