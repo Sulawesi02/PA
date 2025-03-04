@@ -231,8 +231,13 @@ static void handle_negative(){
         }
         if (negative_count % 2 == 1) {
           // 奇数个负号，保留一个负号
-          new_tokens[j].type = tokens[i].type;
-          sprintf(new_tokens[j].str, "-%s", tokens[i].str);
+          if(tokens[i].type == TK_DEC || tokens[i].type == TK_HEX || tokens[i].type == TK_REG) {
+            new_tokens[j].type = tokens[i].type;
+            sprintf(new_tokens[j].str, "-%s", tokens[i].str);
+          } else {
+            new_tokens[j].type = '-';
+            i--;
+          }
         } else{
           // 偶数个负号，不添加负号
           new_tokens[j] = tokens[i];
