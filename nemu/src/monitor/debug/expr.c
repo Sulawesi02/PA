@@ -21,7 +21,7 @@ enum {
   TK_DEC,      // 十进制数
   TK_HEX,      // 十六进制数
   TK_REG,      // 寄存器
-  TK_DEREF     // 解引用
+  TK_REF       // 解引用
 };
 
 // 正则表达式规则数组
@@ -47,7 +47,7 @@ static struct rule {
   {"0[xX][0-9a-fA-F]+", TK_HEX},     // hex
   {"[0-9]|([1-9][0-9]*)", TK_DEC},   // dec
   {"\\$[eE][0-9a-zA-Z]{2}", TK_REG}, // reg
-  {"\\*\\([a-zA-Z0-9]+\\)", TK_DEREF}, // deref
+  {"\\*\\([a-zA-Z0-9]+\\)", TK_REF}, // ref
   {"\\(", '('},         //left parentheses
   {"\\)", ')'},         //right parentheses
 };
@@ -150,7 +150,7 @@ static int get_priority(int type) {
     case '*':
     case '/':
       return 5;
-    case TK_DEREF:
+    case TK_REF:
     case TK_NOT:
       return 6;
     default:
@@ -160,6 +160,29 @@ static int get_priority(int type) {
 
 static bool is_operator(int type) {
   return get_priority(type) <= 6;
+}
+
+// 检查表达式是否被一对匹配的括号包围
+static bool check_parentheses(int p, int q) {
+  if (tokens[p].type != '(' || tokens[q].type != ')') {
+    return false;
+  }
+
+  int paren_level = 0;
+  for (int i = p + 1; i < q; i++) {
+    if (tokens[i].type == '(') {
+      paren_level++;
+    } else if (tokens[i].type == ')') {
+      if (paren_level == 0) {
+        return false;
+      }
+      paren_level--;
+    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // 找到表达式中的主运算符（优先级最低的运算符）
@@ -191,29 +214,6 @@ static int find_dominant_op(int p, int q) {
   return op_pos;
 }
 
-// 检查表达式是否被一对匹配的括号包围
-static bool check_parentheses(int p, int q) {
-  if (tokens[p].type != '(' || tokens[q].type != ')') {
-    return false;
-  }
-
-  int paren_level = 0;
-  for (int i = p + 1; i < q; i++) {
-    if (tokens[i].type == '(') {
-      paren_level++;
-    } else if (tokens[i].type == ')') {
-      if (paren_level == 0) {
-        return false;
-      }
-      paren_level--;
-    } else if (paren_level == 0 && is_operator(tokens[i].type)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 // 语法分析
 static uint32_t eval(int p, int q, bool *success){
   if(p > q) {
@@ -243,6 +243,8 @@ static uint32_t eval(int p, int q, bool *success){
       }
   }
   else if(check_parentheses(p, q)) {
+    printf("expr: parentheses\n");
+    printf("expr: p = %d, q = %d\n", p, q);
     return eval(p + 1, q - 1, success);
   }
   else {
@@ -274,7 +276,7 @@ static uint32_t eval(int p, int q, bool *success){
         *success = true;
         return !val2;
     }
-    if (tokens[op_pos].type == TK_DEREF){
+    if (tokens[op_pos].type == TK_REF){
         if (!right_success) {
           *success = false;
           return 0;
@@ -321,7 +323,7 @@ uint32_t expr(char *e, bool *success) {
   for(int i = 0; i < nr_token; i++) {
     // 如果 * 是表达式的第一个 token 或者 * 前面是一个运算符，则 * 是解引用运算符
     if(tokens[i].type == '*' && (i == 0 || is_operator(tokens[i - 1].type))) {
-      tokens[i].type = TK_DEREF;
+      tokens[i].type = TK_REF;
     }
   }
 
