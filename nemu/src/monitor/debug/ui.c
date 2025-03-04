@@ -165,7 +165,7 @@ static int cmd_p(char *args) {
 
   bool success = false;
   uint32_t value = expr(arg, &success);
-  printf("value: %d\n", value);
+  printf("success: %d\n", success);
   if (success) {
     printf("表达式的值: %d\n", value);
   } else {
