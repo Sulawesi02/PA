@@ -167,6 +167,7 @@ static bool check_parentheses(int p, int q) {
   if (tokens[p].type != '(' || tokens[q].type != ')') {
     return false;
   }
+  printf("111\n");
 
   int paren_level = 0;
   for (int i = p + 1; i < q; i++) {
@@ -182,6 +183,7 @@ static bool check_parentheses(int p, int q) {
     }
   }
 
+  printf("222\n");
   return true;
 }
 
