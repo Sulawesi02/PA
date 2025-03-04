@@ -44,8 +44,8 @@ static struct rule {
   {"&&", TK_AND},       // and
   {"\\|\\|", TK_OR},    // or
   {"!", TK_NOT},        // not
-  {"[0-9]|([1-9][0-9]*)", TK_DEC},   // dec
   {"0[xX][0-9a-fA-F]+", TK_HEX},     // hex
+  {"[0-9]|([1-9][0-9]*)", TK_DEC},   // dec
   {"\\$[eE][0-9a-zA-Z]{2}", TK_REG}, // reg
   {"\\*\\([a-zA-Z0-9]+\\)", TK_DEREF}, // deref
   {"\\(", '('},         //left parentheses
