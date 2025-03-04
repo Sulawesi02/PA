@@ -228,6 +228,7 @@ static void handle_negative(){
               negative_count++;
               i++;
           }
+          i--;
           if (negative_count % 2 == 1) {
               // 奇数个负号，保留一个负号
               new_tokens[j].type = tokens[i].type;
