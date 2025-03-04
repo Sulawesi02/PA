@@ -179,11 +179,12 @@ static bool check_parentheses(int p, int q) {
       }
       paren_level--;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      printf("222\n");
       return false;
     }
   }
 
-  printf("222\n");
+  printf("333\n");
   return true;
 }
 
