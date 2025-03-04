@@ -263,12 +263,20 @@ static double eval(int p, int q, bool *success){
     printf("expr: val1 = %f, success = %d\n", val1, left_success);
     printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
-    if (right_success) {
-      if (tokens[op_pos].type == TK_NOT) {
+    if (tokens[op_pos].type == TK_NOT) {
+      if (right_success) {
         return !val2;
+      } else {
+        *success = false;
+        return 0;
       }
-      if (tokens[op_pos].type == TK_DEREF) {
+    }
+    if (tokens[op_pos].type == TK_DEREF) {
+      if (right_success) {
         return vaddr_read(val2, 4);
+      } else {
+        *success = false;
+        return 0;
       }
     }
 
