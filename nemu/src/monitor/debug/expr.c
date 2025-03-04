@@ -176,6 +176,10 @@ static int find_dominant_op(int p, int q) {
       paren_level--;
       continue;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      if (tokens[i].type == '-' && (i == p || is_operator(tokens[i - 1].type) || tokens[op_pos - 1].type == '(')) {
+        // 跳过负号
+        continue;
+      }
       int priority = get_priority(tokens[i].type);
       if (priority < min_priority) {
         min_priority = priority;
@@ -256,7 +260,7 @@ static double eval(int p, int q, bool *success){
     printf("expr: val1 = %f, success = %d\n", val1, left_success);
     printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
-    if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '('))
+    if (tokens[p].type == '-')
         if (!right_success) {
           *success = false;
           return 0;
