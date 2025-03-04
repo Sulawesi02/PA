@@ -215,7 +215,7 @@ static bool check_parentheses(int p, int q) {
 }
 
 // 语法分析
-static uint32_t eval(int p, int q, bool *success){
+static double eval(int p, int q, bool *success){
   if(p > q) {
     *success = false;
     return 0;
@@ -260,8 +260,8 @@ static uint32_t eval(int p, int q, bool *success){
 
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
       // 处理负号，将其视为 0 - num
-      uint32_t val1 = 0;
-      uint32_t val2 = eval(op_pos + 1, q, &right_success);
+      double val1 = 0;
+      double val2 = eval(op_pos + 1, q, &right_success);
       if (!right_success) {
         *success = false;
         return 0;
@@ -270,11 +270,11 @@ static uint32_t eval(int p, int q, bool *success){
       return val1 - val2;
     }
 
-    uint32_t val1 = eval(p, op_pos - 1, &left_success);
-    uint32_t val2 = eval(op_pos + 1, q, &right_success);
+    double val1 = eval(p, op_pos - 1, &left_success);
+    double val2 = eval(op_pos + 1, q, &right_success);
     
-    printf("expr: val1 = %u, success = %d\n", val1, left_success);
-    printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    printf("expr: val1 = %f, success = %d\n", val1, left_success);
+    printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
     if (!left_success || !right_success) {
       *success = false;
@@ -290,7 +290,7 @@ static uint32_t eval(int p, int q, bool *success){
           *success = false;
           return 0;
         }
-        return (double)val1 / (double)val2;
+        return val1 / val2;
       }
       case TK_EQ: return val1 == val2;
       case TK_NEQ: return val1 != val2;
@@ -306,7 +306,7 @@ static uint32_t eval(int p, int q, bool *success){
   }
 }
 
-uint32_t expr(char *e, bool *success) {
+double expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;

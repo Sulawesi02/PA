@@ -164,12 +164,12 @@ static int cmd_p(char *args) {
   }
 
   bool success = false;
-  uint32_t value = expr(arg, &success);
-  
-  // printf("expr: value = %u, success = %d\n", value, success);
+  double value = expr(arg, &success);
+
+  // printf("expr: value = %f, success = %d\n", value, success);
 
   if (success) {
-    printf("表达式的值: %d\n", value);
+    printf("表达式的值: %f\n", value);
   } else {
     printf("表达式求值失败\n");
   }
