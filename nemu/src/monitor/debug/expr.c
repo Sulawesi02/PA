@@ -259,15 +259,14 @@ static double eval(int p, int q, bool *success){
     bool left_success, right_success = false;
 
     if (tokens[op_pos].type == '-' && (op_pos == p || is_operator(tokens[op_pos - 1].type) || tokens[op_pos - 1].type == '(')) {
-      // 处理负号，将其视为 0 - num
-      double val1 = 0;
-      double val2 = eval(op_pos + 1, q, &right_success);
+      // 处理负号
+      double val2 = eval(op_pos + 1, op_pos + 1, &right_success);
       if (!right_success) {
         *success = false;
         return 0;
       }
       *success = true;
-      return val1 - val2;
+      return -val2;
     }
 
     double val1 = eval(p, op_pos - 1, &left_success);
