@@ -224,9 +224,8 @@ static uint32_t eval(int p, int q, bool *success){
     *success = true;
     switch (tokens[p].type){
       case TK_DEC:
-        return strtoul(tokens[p].str, NULL, 10);
       case TK_HEX:
-        return strtoul(tokens[p].str, NULL, 16);
+        return strtod(tokens[p].str, NULL);
       case TK_REG:{
         if(strcmp(&tokens[p].str[1], "eip") == 0) {
           return cpu.eip;
