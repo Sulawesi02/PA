@@ -170,7 +170,7 @@ static bool check_parentheses(int p, int q) {
   printf("111\n");
 
   int paren_level = 0;
-  for (int i = p + 1; i < q; i++) {
+  for (int i = p; i <= q; i++) {
     if (tokens[i].type == '(') {
       paren_level++;
     } else if (tokens[i].type == ')') {
