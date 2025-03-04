@@ -109,14 +109,12 @@ static bool make_token(char *e) {
           case TK_NOTYPE: break;
           case TK_DEC:
           case TK_HEX:
-          case TK_REG:{
+          case TK_REG:
             strncpy(tokens[nr_token].str, substr_start, substr_len);
             tokens[nr_token].str[substr_len] = '\0';
-          }
-          default: {
+          default:
             tokens[nr_token].type = rules[i].token_type;
             nr_token++;
-          }
         }
 
         break;
@@ -139,16 +137,13 @@ static bool make_token(char *e) {
 // 获取运算符优先级
 static int get_priority(int type) {
   switch (type) {
-    case TK_OR:{
+    case TK_OR:
       return 1;
-    }
-    case TK_AND:{
+    case TK_AND:
       return 2;
-    }
     case TK_EQ:
-    case TK_NEQ:{
+    case TK_NEQ:
       return 3;
-    }
     case '+':
     case '-':
       return 4;
@@ -156,9 +151,8 @@ static int get_priority(int type) {
     case '/':
       return 5;
     case TK_DEREF:
-    case TK_NOT:{
+    case TK_NOT:
       return 6;
-    }
     default:
       return INT_MAX;
   }
@@ -183,13 +177,9 @@ static int find_dominant_op(int p, int q) {
       continue;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
       if (tokens[i].type == '-' && (i == p || is_operator(tokens[i - 1].type) || tokens[op_pos - 1].type == '(')) {
-        // 跳过连续的负号
-        while (i + 1 <= q && tokens[i + 1].type == '-' && is_operator(tokens[i].type)) {
-          i++;
-        }
+        // 跳过负号
         continue;
       }
-      
       int priority = get_priority(tokens[i].type);
       if (priority < min_priority) {
         min_priority = priority;
@@ -234,7 +224,7 @@ static double eval(int p, int q, bool *success){
       case TK_DEC:
       case TK_HEX:
         return strtod(tokens[p].str, NULL);
-      case TK_REG:{
+      case TK_REG:
         if(strcmp(&tokens[p].str[1], "eip") == 0) {
           return cpu.eip;
         }
@@ -245,7 +235,6 @@ static double eval(int p, int q, bool *success){
         }
         *success = false;
         return 0;
-      }
       default:
         *success = false;
         return 0;
@@ -253,6 +242,40 @@ static double eval(int p, int q, bool *success){
   }
   else if(check_parentheses(p, q)) {
     return eval(p + 1, q - 1, success);
+  }
+  else if(tokens[p].type == '-' || tokens[p].type == TK_NOT || tokens[p].type == TK_DEREF) {
+    bool right_success;
+    double val;
+
+    switch (tokens[p].type) {
+      case '-': // 一元负号
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return -val;
+      case TK_NOT: // 逻辑非
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return !val;
+      case TK_DEREF: // 解引用
+        val = eval(p + 1, q, &right_success);
+        if (!right_success) {
+          *success = false;
+          return 0;
+        }
+        *success = true;
+        return vaddr_read((uint32_t)val, 4);
+      default:
+        *success = false;
+        return 0;
+    }
   }
   else {
     int op_pos = find_dominant_op(p, q);
@@ -271,25 +294,6 @@ static double eval(int p, int q, bool *success){
     printf("expr: val1 = %f, success = %d\n", val1, left_success);
     printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
-    if (tokens[op_pos].type == TK_NOT) {
-      if (right_success) {
-        *success = true;
-        return !val2;
-      } else {
-        *success = false;
-        return 0;
-      }
-    }
-    if (tokens[op_pos].type == TK_DEREF) {
-      if (right_success) {
-        *success = true;
-        return vaddr_read(val2, 4);
-      } else {
-        *success = false;
-        return 0;
-      }
-    }
-
     if (!left_success || !right_success) {
       *success = false;
       return 0;
@@ -299,13 +303,12 @@ static double eval(int p, int q, bool *success){
       case '+': return val1 + val2;
       case '-': return val1 - val2;
       case '*': return val1 * val2;
-      case '/': {
+      case '/': 
         if (val2 == 0) {
           *success = false;
           return 0;
         }
         return val1 / val2;
-      }
       case TK_EQ: return val1 == val2;
       case TK_NEQ: return val1 != val2;
       case TK_AND: return val1 && val2;
