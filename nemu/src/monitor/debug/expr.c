@@ -233,15 +233,14 @@ static void handle_negative(){
           // 奇数个负号，保留一个负号
           new_tokens[j].type = tokens[i].type;
           sprintf(new_tokens[j].str, "-%s", tokens[i].str);
-          new_nr_token++;
         } else{
           // 偶数个负号，不添加负号
           new_tokens[j] = tokens[i];
-          new_nr_token++;
         }
+        new_nr_token++;
       } else {
-          new_tokens[j] = tokens[i];
-          new_nr_token++;
+        new_tokens[j] = tokens[i];
+        new_nr_token++;
       }
   }
 }
