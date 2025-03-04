@@ -243,8 +243,6 @@ static uint32_t eval(int p, int q, bool *success){
       }
   }
   else if(check_parentheses(p, q)) {
-    printf("expr: parentheses\n");
-    printf("expr: p = %d, q = %d\n", p, q);
     return eval(p + 1, q - 1, success);
   }
   else {
