@@ -263,6 +263,15 @@ static double eval(int p, int q, bool *success){
     printf("expr: val1 = %f, success = %d\n", val1, left_success);
     printf("expr: val2 = %f, success = %d\n", val2, right_success);
     
+    if (right_success) {
+      if (tokens[op_pos].type == TK_NOT) {
+        return !val2;
+      }
+      if (tokens[op_pos].type == TK_DEREF) {
+        return vaddr_read(val2, 4);
+      }
+    }
+
     if (!left_success || !right_success) {
       *success = false;
       return 0;
@@ -283,10 +292,6 @@ static double eval(int p, int q, bool *success){
       case TK_NEQ: return val1 != val2;
       case TK_AND: return val1 && val2;
       case TK_OR: return val1 || val2;
-      case TK_NOT: return !val2;
-      case TK_DEREF: {
-        return vaddr_read(val1, 4);
-      }
       default:
         *success = false;
         return 0;
