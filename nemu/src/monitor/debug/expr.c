@@ -251,7 +251,7 @@ static uint32_t eval(int p, int q, bool *success){
       return 0;
     }
 
-    bool left_success, right_success;
+    bool left_success, right_success = false;
     uint32_t val1 = eval(p, op_pos - 1, &left_success);
     uint32_t val2 = eval(op_pos + 1, q, &right_success);
 
