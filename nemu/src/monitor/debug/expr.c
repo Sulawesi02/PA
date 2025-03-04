@@ -182,6 +182,14 @@ static int find_dominant_op(int p, int q) {
       paren_level--;
       continue;
     } else if (paren_level == 0 && is_operator(tokens[i].type)) {
+      if (tokens[i].type == '-' && (i == p || is_operator(tokens[i - 1].type) || tokens[op_pos - 1].type == '(')) {
+        // 跳过连续的负号
+        while (i + 1 <= q && tokens[i + 1].type == '-' && is_operator(tokens[i].type)) {
+          i++;
+        }
+        continue;
+      }
+      
       int priority = get_priority(tokens[i].type);
       if (priority < min_priority) {
         min_priority = priority;
