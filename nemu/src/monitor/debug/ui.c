@@ -42,8 +42,8 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
-static int cmd_w(char *args);
-static int cmd_d(char *args);
+// static int cmd_w(char *args);
+// static int cmd_d(char *args);
 
 static struct {
   char *name;
@@ -59,8 +59,8 @@ static struct {
   { "info", "Print program status", cmd_info },
   { "x", "Scan memory", cmd_x },
   { "p", "Evaluate expression", cmd_p },
-  { "w", "Set watchpoint", cmd_w },
-  { "d", "Delete watchpoint", cmd_d },
+  // { "w", "Set watchpoint", cmd_w },
+  // { "d", "Delete watchpoint", cmd_d },
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -174,28 +174,6 @@ static int cmd_p(char *args) {
     printf("表达式求值失败\n");
   }
   
-  return 0;
-}
-
-// 设置监视点
-static int cmd_w(char *args) {
-  char *arg = strtok(NULL, " ");
-  if (arg == NULL) {
-    printf("请输入表达式\n");
-    return 0;
-  }
-  printf("表达式: %s\n", arg);
-  return 0;
-}
-
-// 删除监视点
-static int cmd_d(char *args) {
-  char *arg = strtok(NULL, " ");
-  if (arg == NULL) {
-    printf("请输入表达式\n");
-    return 0;
-  }
-  printf("表达式: %s\n", arg);
   return 0;
 }
 
