@@ -238,7 +238,6 @@ static void handle_negative(){
           new_tokens[j] = tokens[i];
           new_nr_token++;
         }
-        i--;
       } else {
           new_tokens[j] = tokens[i];
           new_nr_token++;
