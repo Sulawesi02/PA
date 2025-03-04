@@ -243,7 +243,7 @@ static double eval(int p, int q, bool *success){
   else if(check_parentheses(p, q)) {
     return eval(p + 1, q - 1, success);
   }
-  else if(tokens[p].type != '-' || tokens[p].type != TK_NOT || tokens[p].type != TK_DEREF) {
+  else if(tokens[p].type != '-' && tokens[p].type != TK_NOT && tokens[p].type != TK_DEREF) {
     int op_pos = find_dominant_op(p, q);
 
     printf("expr: op_pos = %d\n", op_pos);
