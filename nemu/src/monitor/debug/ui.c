@@ -167,7 +167,7 @@ static int cmd_x(char *args) {
 static int cmd_p(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("格式: p EXPR\n\n");
+    printf("格式: p EXPR\n");
     return 0;
   }
 
@@ -177,7 +177,7 @@ static int cmd_p(char *args) {
   // printf("expr: value = %u, success = %d\n", value, success);
 
   if (success) {
-    printf("表达式的值: %u\n", value);
+    printf("表达式的值: 0x%08x\n", value);
   } else {
     printf("表达式求值失败\n");
   }
@@ -189,7 +189,7 @@ static int cmd_p(char *args) {
 static int cmd_w(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("格式: w EXPR\n\n");
+    printf("格式: w EXPR\n");
     return 0;
   }
 
@@ -214,7 +214,7 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("格式: d EXPR\n\n");
+    printf("格式: d EXPR\n");
     return 0;
   }
 
