@@ -95,7 +95,7 @@ static int cmd_help(char *args) {
 static int cmd_si(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    cpu_exec(1);
+    cpu_exec(2);
     return 0;
   } 
 
