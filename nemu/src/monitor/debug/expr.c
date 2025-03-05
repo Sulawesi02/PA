@@ -127,9 +127,9 @@ static bool make_token(char *e) {
     }
   }
 
-  for (int i = 0; i < nr_token; i++) {
-    printf("token[%d]: type = %d, str = %s\n", i, tokens[i].type, tokens[i].str);
-  }
+  // for (int i = 0; i < nr_token; i++) {
+  //   printf("token[%d]: type = %d, str = %s\n", i, tokens[i].type, tokens[i].str);
+  // }
 
   return true;
 }
@@ -248,7 +248,7 @@ static uint32_t eval(int p, int q, bool *success){
   else {
     int op_pos = find_dominant_op(p, q);
 
-    printf("expr: op_pos = %d\n", op_pos);
+    // printf("expr: op_pos = %d\n", op_pos);
 
     if (op_pos == -1) {
       if (tokens[p].type == '-'){
