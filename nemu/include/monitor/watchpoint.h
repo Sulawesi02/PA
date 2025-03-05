@@ -3,13 +3,15 @@
 
 #include "common.h"
 
+#define NR_WP 32
+
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
   char expr[100];
-  uint32_t old_val;
+  uint32_t val;
 
 } WP;
 

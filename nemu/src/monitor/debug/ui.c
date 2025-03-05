@@ -9,7 +9,7 @@
 
 void cpu_exec(uint64_t);
 WP* new_wp();
-void free_wp(WP* wp);
+void free_wp(int n);
 void print_watchpoints();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
@@ -113,7 +113,7 @@ static int cmd_info(char *args) {
   char *arg = strtok(NULL, " ");
   
   if (arg == NULL) {
-    printf("请输入参数\n");
+    printf("格式: info SUBCMD\n");
     return 0;
   }
   
@@ -143,7 +143,7 @@ static int cmd_x(char *args) {
   char *expr = strtok(NULL, " ");
   
   if (n == NULL || expr == NULL) {
-    printf("使用格式: x N EXPR\n");
+    printf("格式: x N EXPR\n");
     return 0;
   }
   
@@ -167,7 +167,7 @@ static int cmd_x(char *args) {
 static int cmd_p(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("请输入表达式\n");
+    printf("格式: p EXPR\n\n");
     return 0;
   }
 
@@ -189,10 +189,24 @@ static int cmd_p(char *args) {
 static int cmd_w(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("请输入表达式\n");
+    printf("格式: w EXPR\n\n");
     return 0;
   }
-  printf("表达式: %s\n", arg);
+
+  bool success = false;
+  uint32_t value = expr(arg, &success);
+
+  // printf("expr: value = %u, success = %d\n", value, success);
+
+  if (!success) {
+    printf("表达式求值失败\n");
+  } 
+
+  WP* wp = new_wp();
+  strncpy(wp->expr, arg, strlen(arg));
+  wp->expr[strlen(arg)] = '\0';
+  wp->val = value;
+
   return 0;
 }
 
@@ -200,10 +214,17 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) {
-    printf("请输入表达式\n");
+    printf("格式: d EXPR\n\n");
     return 0;
   }
-  printf("表达式: %s\n", arg);
+
+  int num = atoi(arg);
+  if (num < 0 || num >= NR_WP) {
+    printf("请输入有效的编号\n");
+    return 0;
+  }
+  free_wp(num);
+
   return 0;
 }
 
