@@ -62,7 +62,7 @@ void print_watchpoints() {
   }
 
   printf("监视点信息：\n");
-  printf("编号\t表达式\t\t值\n");
+  printf("编号\t表达式\t值\n");
    
   while (wp != NULL) {
     printf("%d\t%s\t%d\n", wp->NO, wp->expr, wp->val);
