@@ -263,8 +263,8 @@ static uint32_t eval(int p, int q, bool *success){
     uint32_t val1 = eval(p, op_pos - 1, &left_success);
     uint32_t val2 = eval(op_pos + 1, q, &right_success);
     
-    printf("expr: val1 = %u, success = %d\n", val1, left_success);
-    printf("expr: val2 = %u, success = %d\n", val2, right_success);
+    printf("expr: val1 = %08x, success = %d\n", val1, left_success);
+    printf("expr: val2 = %08x, success = %d\n", val2, right_success);
     
     if (tokens[op_pos].type == TK_NOT){
         if (!right_success) {
