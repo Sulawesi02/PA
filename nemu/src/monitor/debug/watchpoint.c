@@ -76,3 +76,24 @@ void print_watchpoints() {
   }
 }
 
+bool check_watchpoints(){
+  WP *wp = head;
+  bool is_changed = false;
+  bool success = false;
+  while (wp) {
+    uint32_t new_val = expr(wp->expr, &success);
+    if (!success) {
+      printf("表达式求值失败\n");
+      continue;
+    } 
+    if (new_val != wp->val) {
+      printf("监视点发生变化：\n");
+      printf("编号\t表达式\t\t旧值\t\t新值\n");
+      printf("%d\t%s\t\t%d\t\t%d\n", wp->NO, wp->expr, wp->val, new_val);
+      is_changed = true;
+      wp->val = new_val;
+    }
+    wp = wp->next;
+  }
+  return is_changed;
+}
