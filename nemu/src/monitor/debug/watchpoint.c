@@ -43,12 +43,18 @@ void free_wp(int n){
       break;
     }
     wp = wp->next;
-    if(wp == NULL){
-      printf("编号为%d的监视点不存在\n", n);
-      assert(0);
-      }
   }
 
+  if (wp == head) {
+    head = wp->next;
+  } else {
+    WP* prev = head;
+    while (prev->next!= wp) {
+      prev = prev->next;
+    }
+    prev->next = wp->next;
+  }
+  
   wp->next = free_;
   free_ = wp;
 }
@@ -65,7 +71,7 @@ void print_watchpoints() {
   printf("编号\t表达式\t\t值\n");
    
   while (wp != NULL) {
-    printf("%d\t%s\t%d\n", wp->NO, wp->expr, wp->val);
+    printf("%d\t%s\t\t%d\n", wp->NO, wp->expr, wp->val);
     wp = wp->next;
   }
 }
