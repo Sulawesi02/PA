@@ -13,7 +13,17 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  TODO();
+  // 执行异或操作
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
+  
+  // 更新零标志位和符号标志位
+  rtl_update_ZFSF(&t2, id_dest->width);
+  
+  // 逻辑运算清除CF和OF
+  rtl_li(&t0, 0);
+  rtl_set_CF(&t0);
+  rtl_set_OF(&t0);
 
   print_asm_template2(xor);
 }
