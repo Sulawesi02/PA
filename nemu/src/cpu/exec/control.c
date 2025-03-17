@@ -25,31 +25,19 @@ make_EHelper(jmp_rm) {
 
 make_EHelper(call) {
   // the target address is calculated at the decode stage
-  // 将返回地址(eip)压入栈
-  rtl_push(eip);
-  // 设置跳转标志
-  decoding.is_jmp = 1;
+  TODO();
 
   print_asm("call %x", decoding.jmp_eip);
 }
 
 make_EHelper(ret) {
-  // 从栈中弹出返回地址
-  rtl_pop(&t2);
-  // 设置跳转目标和标志
-  decoding.jmp_eip = t2;
-  decoding.is_jmp = 1;
+  TODO();
 
   print_asm("ret");
 }
 
 make_EHelper(call_rm) {
-  // 保存返回地址到栈上
-  rtl_push(eip);
-  
-  // 设置跳转目标
-  decoding.jmp_eip = id_dest->val;
-  decoding.is_jmp = 1;
+  TODO();
 
   print_asm("call *%s", id_dest->str);
 }
