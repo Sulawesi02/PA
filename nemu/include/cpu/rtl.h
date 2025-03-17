@@ -113,10 +113,10 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
 
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    TODO(); \
+    cpu.eflags.f = *src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    TODO(); \
+    *dest = cpu.eflags.f; \
   }
 
 make_rtl_setget_eflags(CF)
@@ -155,34 +155,48 @@ static inline void rtl_pop(rtlreg_t* dest) {
   rtl_addi(&cpu.esp, &cpu.esp, 4);
 }
 
+// 判断src1是否为0
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 == 0 ? 1 : 0)
-  TODO();
+  //TODO();
+  *dest = (*src1 == 0 ? 1 : 0);
 }
 
+// 判断src1是否等于imm
 static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
   // dest <- (src1 == imm ? 1 : 0)
-  TODO();
+  //TODO();
+  *dest = (*src1 == imm ? 1 : 0);
 }
 
+// 判断src1是否不等于0
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  TODO();
+  //TODO();
+  *dest = (*src1 != 0 ? 1 : 0);
 }
 
+// 判断src1的最高位是否为1
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  TODO();
+  //TODO();
+  *dest = (*src1 >> (width * 8 - 1)) & 1;
 }
 
+// 更新零标志位
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  TODO();
+  //TODO();
+  uint32_t mask = (1 << (width * 8)) - 1;
+  cpu.eflags.ZF = ((*result & mask) == 0);
 }
 
+// 更新符号标志位
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  TODO();
+  //TODO();
+  uint32_t mask = 1 << (width * 8 - 1);
+  cpu.eflags.SF = ((*result & mask) != 0);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
