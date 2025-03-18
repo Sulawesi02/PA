@@ -14,10 +14,10 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
   // TODO: Query EFLAGS to determine whether the condition code is satisfied.
   // dest <- ( cc is satisfied ? 1 : 0)
   switch (subcode & 0xe) {
-    case CC_O:// 获取溢出标志(OF)
+    case CC_O:// 获取溢出标志位(OF)
       rtl_get_OF(dest);
       break;
-    case CC_B:// 获取进位标志(CF)
+    case CC_B:// 获取进位标志位(CF)
       rtl_get_CF(dest);
       break;
     case CC_E:// 获取零标志位(ZF)

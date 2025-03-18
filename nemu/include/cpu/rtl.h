@@ -191,7 +191,7 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   *dest = (*src1 >> (width * 8 - 1)) & 1;
 }
 
-// 更新零标志位
+// 更新零标志位(ZF)
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //TODO();
@@ -199,7 +199,7 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   cpu.eflags.ZF = ((*result & mask) == 0);
 }
 
-// 更新符号标志位
+// 更新符号标志位(SF)
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   //TODO();

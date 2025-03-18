@@ -8,11 +8,11 @@ make_EHelper(add) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
   
-  // 设置进位标志(CF)
+  // 设置进位标志位(CF)
   rtl_sltu(&t0, &t2, &id_dest->val);
   rtl_set_CF(&t0);
   
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &t2);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
@@ -29,11 +29,11 @@ make_EHelper(sub) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
   
-  // 设置进位标志(CF)
+  // 设置进位标志位(CF)
   rtl_sltu(&t0, &id_dest->val, &t2);
   rtl_set_CF(&t0);
 
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
@@ -49,11 +49,11 @@ make_EHelper(cmp) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  // 设置进位标志(CF)
+  // 设置进位标志位(CF)
   rtl_sltu(&t0, &id_dest->val, &t2);
   rtl_set_CF(&t0);
 
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
@@ -71,7 +71,7 @@ make_EHelper(inc) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
   
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &t2);
   rtl_set_OF(&t0);
   print_asm_template1(inc);
@@ -86,7 +86,7 @@ make_EHelper(dec) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &t2);
   rtl_set_OF(&t0);
   print_asm_template1(dec);
@@ -101,11 +101,11 @@ make_EHelper(neg) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  // 设置进位标志(CF)
+  // 设置进位标志位(CF)
   rtl_sltu(&t0, &id_dest->val, &t2);
   rtl_set_CF(&t0);
 
-  // 设置溢出标志(OF)
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
