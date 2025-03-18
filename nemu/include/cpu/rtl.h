@@ -126,17 +126,25 @@ make_rtl_setget_eflags(SF)
 
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
   // dest <- src1
-  TODO();
+  //TODO();
+  *dest = *src1;
 }
 
 static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
-  TODO();
+  //TODO();
+  *dest = ~(*dest);
 }
 
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  TODO();
+  //TODO();
+  // 获取符号位
+  uint32_t sign_bit = (*src1 >> (width * 8 - 1)) & 1;
+  // 生成全1或全0的掩码（高位补符号位）
+  uint32_t mask = (sign_bit ? ~0 : 0) << (width * 8);
+  // 将原数与掩码组合
+  *dest = (*src1) | mask;
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {

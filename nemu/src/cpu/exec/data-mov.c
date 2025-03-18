@@ -30,18 +30,26 @@ make_EHelper(popa) {
   print_asm("popa");
 }
 
+// 函数返回时，更新栈顶和栈底指针
 make_EHelper(leave) {
-  TODO();
-
+  //TODO();
+  rtl_mv(&cpu.esp, &cpu.ebp);
+  rtl_pop(&cpu.ebp);
   print_asm("leave");
 }
 
+// 把eax的32位整数扩展为64位，高32位用eax的符号位填充保存到edx
+// 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx。
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    //TODO();
+    rtl_sext(&t0, &cpu.eax, 2); // 扩展为32位
+    rtl_mv(&cpu.edx, &t0); // 保存到edx
   }
   else {
-    TODO();
+    //TODO();
+    rtl_sext(&t0, &cpu.eax, 4); // 扩展为64位
+    rtl_mv(&cpu.edx, &t0); // 保存到edx
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
