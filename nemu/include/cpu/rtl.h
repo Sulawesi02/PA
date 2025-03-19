@@ -197,7 +197,8 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   //TODO();
   uint32_t mask = (1 << (width * 8)) - 1;
   cpu.eflags.ZF = ((*result & mask) == 0);
-  printf("result: %x, mask: %x", *result, mask);
+  printf("result: %x\n", *result);
+  printf("mask: %x\n", mask);
   printf("ZF: %d\n", cpu.eflags.ZF);
 }
 
