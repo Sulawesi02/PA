@@ -30,7 +30,7 @@ make_EHelper(and) {
 
 make_EHelper(xor) {
   //TODO();
-  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
   
   // 更新零标志位(ZF)和符号标志位(SF)
