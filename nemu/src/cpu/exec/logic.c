@@ -30,11 +30,11 @@ make_EHelper(and) {
 
 make_EHelper(xor) {
   //TODO();
-  rtl_xor(&t2, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
   
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t0, id_dest->width);
   
   // 逻辑运算清除进位标志位(CF)和溢出标志位(OF)
   rtl_set_CF(&tzero);
@@ -44,11 +44,11 @@ make_EHelper(xor) {
 
 make_EHelper(or) {
   //TODO();
-  rtl_or(&t2, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_or(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
 
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t0, id_dest->width);
 
   // 逻辑运算清除进位标志位(CF)和溢出标志位(OF)
   rtl_set_CF(&tzero);
@@ -60,11 +60,11 @@ make_EHelper(or) {
 make_EHelper(sar) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
-  rtl_sext(&t2, &id_dest->val, id_dest->width);
-  rtl_sar(&t2, &t2, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_sext(&t0, &id_dest->val, id_dest->width);
+  rtl_sar(&t0, &t0, &id_src->val);
+  operand_write(id_dest, &t0);
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t0, id_dest->width);
   print_asm_template2(sar);
 }
 
@@ -72,10 +72,10 @@ make_EHelper(sar) {
 make_EHelper(shl) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
-  rtl_shl(&t2, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_shl(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t0, id_dest->width);
 
   print_asm_template2(shl);
 }
@@ -84,10 +84,10 @@ make_EHelper(shl) {
 make_EHelper(shr) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
-  rtl_shr(&t2, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_shr(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t0, id_dest->width);
 
   print_asm_template2(shr);
 }
