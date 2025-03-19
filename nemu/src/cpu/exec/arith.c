@@ -80,7 +80,7 @@ make_EHelper(inc) {
 // 自减，不影响进位标志位(CF)  
 make_EHelper(dec) {
   //TODO();
-  rtl_addi(&t2, &id_dest->val, -1);
+  rtl_subi(&t2, &id_dest->val, 1);
   operand_write(id_dest, &t2);
 
   // 更新零标志位(ZF)和符号标志位(SF)
