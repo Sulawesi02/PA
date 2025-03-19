@@ -159,8 +159,8 @@ static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
   //TODO();
-  rtl_lm(dest, &cpu.esp, 4);  
-  rtl_addi(&cpu.esp, &cpu.esp, 4);
+  rtl_lm(dest, &cpu.esp, 4);// 从esp处读取数据到dest
+  rtl_addi(&cpu.esp, &cpu.esp, 4);// esp+4
 }
 
 // 判断src1是否为0

@@ -39,21 +39,23 @@ make_EHelper(leave) {
 }
 
 // 把eax的32位整数扩展为64位，高32位用eax的符号位填充保存到edx
-// 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx。
+// 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
-    // ax的16位整数扩展为32位
-    // rtl_sext(&t0, R_AX, 2);
-    // // 高16位用ax的符号位填充保存到dx
-    // rtl_sext(&t1, R_DX, 2);
-    // rtl_sr(R_EDX, &t1, 2);
-    // rtl_sr(R_EAX, &t0, 4);
-
-    
+    //TODO();
+    rtl_lr_w(&t0, R_EAX);
+    rtl_sext(&t0, R_AX, 2);
+    // 将t0的高16位保存到dx
+    rtl_shri(&t0, &t0, 16);
+    rtl_sr_w(R_DX, &t0);
   }
   else {
-    TODO();
+    //TODO();
+    rtl_lr_w(&t0, R_EAX);
+    rtl_sext(&t0, R_EAX, 4);
+    // 将t0的高32位保存到edx
+    rtl_shri(&t0, &t0, 32);
+    rtl_sr_w(R_EDX, &t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
