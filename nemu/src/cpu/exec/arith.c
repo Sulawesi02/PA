@@ -1,8 +1,23 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  TODO();
+  //TODO();
+  rtl_add(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
 
+  // 更新零标志位(ZF)和符号标志位(SF)
+  rtl_update_ZFSF(&t2, id_dest->width);
+  
+  // 设置进位标志位(CF)
+  rtl_sltu(&t0, &t2, &id_dest->val);
+  rtl_set_CF(&t0);
+  
+  // 设置溢出标志位(OF)
+  rtl_xor(&t0, &id_dest->val, &t2);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template2(add);
 }
 
@@ -11,44 +26,95 @@ make_EHelper(sub) {
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
   
+  // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t2, id_dest->width);
   
+  // 设置进位标志位(CF)
   rtl_sltu(&t0, &id_dest->val, &t2);
   rtl_set_CF(&t0);
-  
+
+  // 设置溢出标志位(OF)
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
-  TODO();
+  //TODO();
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
 
+  // 更新零标志位(ZF)和符号标志位(SF)
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  // 设置进位标志位(CF)
+  rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_set_CF(&t0);
+
+  // 设置溢出标志位(OF)
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template2(cmp);
 }
 
+// 自增，不影响进位标志位(CF) 
 make_EHelper(inc) {
-  TODO();
+  //TODO();
+  rtl_addi(&t2, &id_dest->val, 1);
+  operand_write(id_dest, &t2);
 
+  // 更新零标志位(ZF)和符号标志位(SF)
+  rtl_update_ZFSF(&t2, id_dest->width);
+  
+  // 设置溢出标志位(OF)
+  rtl_eqi(&t0, &t2, 0x80000000);
+  rtl_set_OF(&t0);
   print_asm_template1(inc);
 }
 
+// 自减，不影响进位标志位(CF)  
 make_EHelper(dec) {
-  TODO();
+  //TODO();
+  rtl_subi(&t2, &id_dest->val, 1);
+  operand_write(id_dest, &t2);
 
+  // 更新零标志位(ZF)和符号标志位(SF)
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  // 设置溢出标志位(OF)
+  rtl_eqi(&t0, &t2, 0x7fffffff);
+  rtl_set_OF(&t0);
   print_asm_template1(dec);
 }
 
+// 求补
 make_EHelper(neg) {
-  TODO();
+  //TODO();
+  rtl_sub(&t2, &tzero, &id_dest->val);
+  operand_write(id_dest, &t2);
 
+  // 更新零标志位(ZF)和符号标志位(SF)
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  // 设置进位标志位(CF)
+  rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_set_CF(&t0);
+
+  // 设置溢出标志位(OF)
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template1(neg);
 }
 
+// 带进位加法
 make_EHelper(adc) {
   rtl_add(&t2, &id_dest->val, &id_src->val);
   rtl_sltu(&t3, &t2, &id_dest->val);
@@ -72,6 +138,7 @@ make_EHelper(adc) {
   print_asm_template2(adc);
 }
 
+// 带借位减法
 make_EHelper(sbb) {
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   rtl_sltu(&t3, &id_dest->val, &t2);

@@ -119,15 +119,21 @@ static int cmd_info(char *args) {
   
   if (strcmp(arg, "r") == 0) {
     for (int i = 0; i < 8; i++) {
-      printf("%s:0x%x\n", reg_name(i,4), reg_l(i));
+      printf("%s:0x%08x\n", reg_name(i,4), reg_l(i));
     }
     for (int i = 0; i < 8; i++) {
-      printf("%s:0x%x\n", reg_name(i,2), reg_w(i));
+      printf("%s:0x%08x\n", reg_name(i,2), reg_w(i));
     }
     for (int i = 0; i < 8; i++) {
-      printf("%s:0x%x\n", reg_name(i,1), reg_b(i));
+      printf("%s:0x%08x\n", reg_name(i,1), reg_b(i));
     }
-    printf("eip:0x%x\n", cpu.eip);
+    printf("eip:0x%08x\n", cpu.eip);
+    printf("CF:%d\n",cpu.eflags.CF);
+    printf("ZF:%d\n",cpu.eflags.ZF);
+    printf("SF:%d\n",cpu.eflags.SF);
+    printf("IF:%d\n",cpu.eflags.IF);
+    printf("OF:%d\n",cpu.eflags.OF);
+
   } else if (strcmp(arg,"w") == 0){
     print_watchpoints();// 打印所有监视点信息
   } else{

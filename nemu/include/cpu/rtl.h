@@ -126,17 +126,22 @@ make_rtl_setget_eflags(SF)
 
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
   // dest <- src1
-  TODO();
+  //TODO();
+  *dest = *src1;
 }
 
 static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
-  TODO();
+  //TODO();
+  *dest = ~(*dest);
 }
 
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  TODO();
+  //TODO();
+  rtl_li(&t1,32-width*8);
+  rtl_shl(dest,src1,&t1);
+  rtl_sar(dest,dest,&t1);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
@@ -151,8 +156,8 @@ static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
   //TODO();
-  rtl_lm(dest, &cpu.esp, 4);  
-  rtl_addi(&cpu.esp, &cpu.esp, 4);
+  rtl_lm(dest, &cpu.esp, 4);// 从esp处读取数据到dest
+  rtl_addi(&cpu.esp, &cpu.esp, 4);// esp+4
 }
 
 // 判断src1是否为0
@@ -176,22 +181,25 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   *dest = (*src1 != 0 ? 1 : 0);
 }
 
-// 判断src1的最高位是否为1
+// 判断src1的符号位是否为1
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   //TODO();
   *dest = (*src1 >> (width * 8 - 1)) & 1;
 }
 
-// 更新零标志位
+// 更新零标志位(ZF)
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //TODO();
-  uint32_t mask = (1 << (width * 8)) - 1;
+  uint32_t mask;
+  if (width == 1) mask = 0xFF;
+  else if(width == 2)mask = 0xFFFF;
+  else mask = 0xFFFFFFFF;
   cpu.eflags.ZF = ((*result & mask) == 0);
 }
 
-// 更新符号标志位
+// 更新符号标志位(SF)
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   //TODO();
