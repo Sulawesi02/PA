@@ -4,9 +4,11 @@
 make_EHelper(test) {
   //TODO();
   rtl_and(&t0, &id_dest->val, &id_src->val);
+  printf("%d+%d\n", id_dest->val, id_src->val);
 
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t0, id_dest->width);
+  printf("%d\n", id_dest->width);
 
   // 进位标志位(CF)和溢出标志位(OF)置零
   rtl_set_CF(&tzero);

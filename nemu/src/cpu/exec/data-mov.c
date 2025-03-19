@@ -42,18 +42,18 @@ make_EHelper(leave) {
 // 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx。
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    //TODO();
-    printf("eax = 0x%08x", cpu.eax);
-    rtl_sext(&t0, &cpu.eax, 2); // 扩展为32位
-    rtl_mv(&cpu.edx, &t0); // 保存到edx
-    printf("edx = 0x%08x", cpu.edx);
+    TODO();
+    // ax的16位整数扩展为32位
+    // rtl_sext(&t0, R_AX, 2);
+    // // 高16位用ax的符号位填充保存到dx
+    // rtl_sext(&t1, R_DX, 2);
+    // rtl_sr(R_EDX, &t1, 2);
+    // rtl_sr(R_EAX, &t0, 4);
+
+    
   }
   else {
-    //TODO();
-    printf("eax = 0x%08x", cpu.eax);
-    rtl_sext(&t0, &cpu.eax, 4); // 扩展为64位
-    rtl_mv(&cpu.edx, &t0); // 保存到edx
-    printf("edx = 0x%08x", cpu.edx);
+    TODO();
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
