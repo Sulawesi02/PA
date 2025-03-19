@@ -38,8 +38,6 @@ make_EHelper(leave) {
   print_asm("leave");
 }
 
-// 把eax的32位整数扩展为64位，高32位用eax的符号位填充保存到edx
-// 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
