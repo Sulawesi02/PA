@@ -1,6 +1,5 @@
 int main(){
-    int a=12, b=5;
-    b++;
+    int a=5, b=1;
     a = a / b;
-    return a;
+    return 0;
 }
