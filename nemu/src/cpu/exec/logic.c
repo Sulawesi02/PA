@@ -16,8 +16,8 @@ make_EHelper(test) {
 
 make_EHelper(and) {
   //TODO();
-  rtl_and(&t2, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &t2);
+  rtl_and(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
 
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t0, id_dest->width);
