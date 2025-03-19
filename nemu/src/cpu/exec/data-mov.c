@@ -43,19 +43,13 @@ make_EHelper(leave) {
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
-    // rtl_sext(&t0, &cpu.eax, 2); // 扩展为32位
-    // rtl_mv(&cpu.edx, &t0); // 保存到edx
-    rtl_msb(&t0, &cpu.eax, 2);
-    if(t0 == 1) cpu.edx = cpu.edx | 0xffff;
-    else cpu.edx = 0;
+    rtl_sext(&t0, &cpu.eax, 2); // 扩展为32位
+    rtl_mv(&cpu.edx, &t0); // 保存到edx
   }
   else {
     //TODO();
-    // rtl_sext(&t0, &cpu.eax, 4); // 扩展为64位
-    // rtl_mv(&cpu.edx, &t0); // 保存到edx
-    rtl_msb(&t0, &cpu.eax, 4);
-    if(t0 == 1) cpu.edx = cpu.edx | 0xffffffff;
-    else cpu.edx = 0;
+    rtl_sext(&t0, &cpu.eax, 4); // 扩展为64位
+    rtl_mv(&cpu.edx, &t0); // 保存到edx
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
