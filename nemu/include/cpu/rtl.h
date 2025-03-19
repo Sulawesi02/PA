@@ -195,12 +195,11 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //TODO();
-  uint32_t mask = (1 << (width * 8)) - 1;
-  printf("result: %x\n", *result);
-  printf("mask: %x\n", mask);
-
+  uint32_t mask;
+  if (width == 1) mask = 0xFF;
+  else if(width == 2)mask = 0xFFFF;
+  else mask = 0xFFFFFFFF;
   cpu.eflags.ZF = ((*result & mask) == 0);
-  printf("ZF: %d\n", cpu.eflags.ZF);
 }
 
 // 更新符号标志位(SF)
