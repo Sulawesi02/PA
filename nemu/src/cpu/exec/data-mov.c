@@ -42,24 +42,34 @@ make_EHelper(leave) {
 // 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
-    // rtl_lr_w(&t0, R_AX);
-    // printf("t0=%d\n", t0);
-    // rtl_sext(&t0, R_AX, 2);
-    // printf("t0=%d\n", t0);
-    // rtl_shri(&t0, &t0, 16);
-    // printf("t0=%d\n", t0);
-    // rtl_sr_w(R_DX, &t0);
+    //TODO();
+    // 将AX符号扩展到DX:AX
+    rtl_lr(&t0,R_AX,2);//加载AX到t0
+    rtl_sext(&t0,&t0,2);//符号扩展t0
+    rtl_msb(&t1,&t0,2);// 获取符号位
+
+    if(t1==0){
+      rtl_li(&t1,0);
+    }
+    else{
+      rtl_li(&t1,0xffff);
+    }
+    rtl_sr(R_DX,2,&t1); // 设置DX
+
   }
   else {
-    TODO();
-    // rtl_lr_w(&t0, R_EAX);
-    // printf("t0=%d\n", t0);
-    // rtl_sext(&t0, R_EAX, 4);
-    // printf("t0=%d\n", t0);
-    // rtl_shri(&t0, &t0, 32);
-    // printf("t0=%d\n", t0);
-    // rtl_sr_w(R_EDX, &t0);
+    //TODO();
+    // 将EAX符号扩展到EDX:EAX
+    rtl_lr(&t0,R_EAX,4);//加载EAX到t0
+    rtl_sext(&t0,&t0,4);//符号扩展t0
+    rtl_msb(&t1,&t0,4);// 获取符号位
+    if(t1==0){
+      rtl_li(&t1,0);
+    }
+    else{
+      rtl_li(&t1,0xffffffff);
+    }
+    rtl_sr(R_EDX,4,&t1); // 设置EDX
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
