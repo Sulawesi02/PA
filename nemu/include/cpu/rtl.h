@@ -139,12 +139,16 @@ static inline void rtl_not(rtlreg_t* dest) {
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   //TODO();
-  // 获取符号位
-  uint32_t sign_bit = (*src1 >> (width * 8 - 1)) & 1;
-  // 生成全1或全0的掩码（高位补符号位）
-  uint32_t mask = (sign_bit ? ~0 : 0) << (width * 8);
-  // 将原数与掩码组合
-  *dest = (*src1) | mask;
+  // // 获取符号位
+  // uint32_t sign_bit = (*src1 >> (width * 8 - 1)) & 1;
+  // // 生成全1或全0的掩码（高位补符号位）
+  // uint32_t mask = (sign_bit ? ~0 : 0) << (width * 8);
+  // // 将原数与掩码组合
+  // *dest = (*src1) | mask;
+
+  rtl_li(&t1,32-width*8);
+  rtl_shl(dest,src1,&t1);
+  rtl_sar(dest,dest,&t1);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {

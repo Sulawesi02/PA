@@ -64,7 +64,7 @@ make_EHelper(sar) {
   rtl_sar(&t2, &t2, &id_src->val);
   operand_write(id_dest, &t2);
   // 更新零标志位(ZF)和符号标志位(SF)
-  rtl_update_ZFSF(&id_dest->val, id_dest->width);
+  rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(sar);
 }
 
