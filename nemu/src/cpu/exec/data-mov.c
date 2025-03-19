@@ -42,24 +42,24 @@ make_EHelper(leave) {
 // 或ax的16位整数扩展为32位，高16位用ax的符号位填充保存到dx
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    //TODO();
-    rtl_lr_w(&t0, R_AX);
-    printf("t0=%d\n", t0);
-    rtl_sext(&t0, R_AX, 2);
-    printf("t0=%d\n", t0);
-    rtl_shri(&t0, &t0, 16);
-    printf("t0=%d\n", t0);
-    rtl_sr_w(R_DX, &t0);
+    TODO();
+    // rtl_lr_w(&t0, R_AX);
+    // printf("t0=%d\n", t0);
+    // rtl_sext(&t0, R_AX, 2);
+    // printf("t0=%d\n", t0);
+    // rtl_shri(&t0, &t0, 16);
+    // printf("t0=%d\n", t0);
+    // rtl_sr_w(R_DX, &t0);
   }
   else {
-    //TODO();
-    rtl_lr_w(&t0, R_EAX);
-    printf("t0=%d\n", t0);
-    rtl_sext(&t0, R_EAX, 4);
-    printf("t0=%d\n", t0);
-    rtl_shri(&t0, &t0, 32);
-    printf("t0=%d\n", t0);
-    rtl_sr_w(R_EDX, &t0);
+    TODO();
+    // rtl_lr_w(&t0, R_EAX);
+    // printf("t0=%d\n", t0);
+    // rtl_sext(&t0, R_EAX, 4);
+    // printf("t0=%d\n", t0);
+    // rtl_shri(&t0, &t0, 32);
+    // printf("t0=%d\n", t0);
+    // rtl_sr_w(R_EDX, &t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
