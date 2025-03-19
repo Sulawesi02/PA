@@ -43,7 +43,7 @@ make_EHelper(leave) {
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
-    rtl_lr_w(&t0, R_EAX);
+    rtl_lr_w(&t0, R_AX);
     rtl_sext(&t0, R_AX, 2);
     // 将t0的高16位保存到dx
     rtl_shri(&t0, &t0, 16);
