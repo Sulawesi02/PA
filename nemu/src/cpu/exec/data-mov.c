@@ -53,7 +53,6 @@ make_EHelper(cltd) {
       rtl_li(&t1, 0xffff);
     }
     rtl_sr(R_DX, 2, &t1); // 设置DX
-
   }
   else {
     //TODO();

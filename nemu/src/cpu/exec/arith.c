@@ -42,6 +42,7 @@ make_EHelper(sub) {
   print_asm_template2(sub);
 }
 
+// 与sub类似，只是不存储结果
 make_EHelper(cmp) {
   //TODO();
   rtl_sub(&t2, &id_dest->val, &id_src->val);
