@@ -61,41 +61,16 @@ make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     //TODO();
     // cbtw:将AL扩展到AX
-    printf("cbtw");
     t0 = reg_b(0); // 获取AL
-    rtl_sext(&t1, &t0, 1); // AL符号扩展
+    rtl_sext(&t1, &t0, 2); // AL符号扩展
     reg_w(0) = (uint16_t)t1;
   }
   else {
     //TODO();
     // cwtl:将AX符号扩展到EAX
-    printf("cwtl\n");
-
-    printf("AL: 0x%08x\n", reg_b(0));
-    printf("AH: 0x%08x\n", reg_b(4));
-    printf("AX: 0x%08x\n", reg_w(0));
-    printf("EAX: 0x%08x\n", reg_l(0));
-
-    printf("111\n");
-
     t0 = reg_w(0); // 获取AX
-
-    printf("AX: 0x%08x\n", t0);
-
-    rtl_sext(&t1, &t0, 2); // EAX符号扩展
-
-    printf("222\n");
-    printf("EAX: 0x%08x\n", t1);
-
+    rtl_sext(&t1, &t0, 4); // EAX符号扩展
     reg_l(0) = (uint32_t)t1;
-    
-    printf("333\n");
-
-    printf("AL: 0x%08x\n", reg_b(0));
-    printf("AH: 0x%08x\n", reg_b(4));
-    printf("AX: 0x%08x\n", reg_w(0));
-    printf("EAX: 0x%08x\n", reg_l(0));
-    
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
