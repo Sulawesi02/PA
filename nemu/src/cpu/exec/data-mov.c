@@ -62,7 +62,7 @@ make_EHelper(cwtl) {
     //TODO();
     // cbtw:将AL扩展到AX
     t0 = reg_b(0); // 获取AL
-    rtl_sext(&t0, &t0, 2); // AL符号扩展
+    rtl_sext(&t0, &t0, 1); // AL符号扩展
     reg_w(0) = (uint16_t)t0;
   }
   else {
@@ -81,7 +81,7 @@ make_EHelper(cwtl) {
 
     printf("AX: 0x%08x\n", t0);
 
-    rtl_sext(&t0, &t0, 4); // EAX符号扩展
+    rtl_sext(&t0, &t0, 2); // EAX符号扩展
 
     printf("\n");
     printf("EAX: 0x%08x\n", t0);
