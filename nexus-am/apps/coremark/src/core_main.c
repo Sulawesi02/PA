@@ -46,6 +46,7 @@ void *iterate(void *pres) {
 	res->crcstate=0;
 
 	for (i=0; i<iterations; i++) {
+		printf("Iteration %d\n",i);
 		crc=core_bench_list(res,1);
 		res->crc=crcu16(crc,res->crc);
 		crc=core_bench_list(res,-1);
