@@ -17,17 +17,17 @@ extern "C" {
 #define REF_CPU    "i7-6700 @ 3.40GHz"
 #define REF_SCORE  100000
 
-#define SETTING 1
+#define SETTING_REF 1
 
-// #ifdef SETTING_TEST
-//   #define SETTING 0
-// #else
-//   #ifdef SETTING_REF
-//     #define SETTING 1
-//   #else
-//     #error "Must define SETTING_TEST or SETTING_REF"
-//   #endif
-// #endif
+#ifdef SETTING_TEST
+  #define SETTING 0
+#else
+  #ifdef SETTING_REF
+    #define SETTING 1
+  #else
+    #error "Must define SETTING_TEST or SETTING_REF"
+  #endif
+#endif
 
 #define REPEAT  1
 
