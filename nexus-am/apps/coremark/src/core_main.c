@@ -45,24 +45,14 @@ void *iterate(void *pres) {
 	res->crcmatrix=0;
 	res->crcstate=0;
 
-	ee_printf("Total iterations: %u\n", iterations);  // 添加总迭代次数
-	ee_printf("Progress: 0%%");                       // 初始进度
-	
 	for (i=0; i<iterations; i++) {
-		// 每完成1%输出进度（或调整这个值）
-		if (i % (iterations/1000 + 1) == 0) { 
-			ee_printf("\rProgress: %d%% (%d/%d)", 
-				(int)((i*100)/iterations), i, iterations);
-		}
-		
+		printf("Iteration %d\n",i);
 		crc=core_bench_list(res,1);
 		res->crc=crcu16(crc,res->crc);
 		crc=core_bench_list(res,-1);
 		res->crc=crcu16(crc,res->crc);
 		if (i==0) res->crclist=res->crc;
 	}
-	
-	ee_printf("\rProgress: 100%% (%d/%d) Completed!\n", iterations, iterations); // 最终完成提示
 	return NULL;
 }
 

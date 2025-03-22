@@ -2,8 +2,8 @@
 #include "monitor/monitor.h"
 #include <SDL2/SDL.h>
 
-#define I8042_DATA_PORT 0x60
-#define I8042_STATUS_PORT 0x64
+#define I8042_DATA_PORT 0x60// 数据寄存器
+#define I8042_STATUS_PORT 0x64// 状态寄存器
 #define I8042_STATUS_HASKEY_MASK 0x1
 #define KEYBOARD_IRQ 1
 
