@@ -22,9 +22,13 @@ _Screen _screen = {
 extern void* memcpy(void *, const void *, int);
 
 void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
-  int i;
-  for (i = 0; i < _screen.width * _screen.height; i++) {
-    fb[i] = i;
+  int minx=(w<_screen.width - x)?w:_screen.width - x;//x+w不能超过最大宽度
+  int cp_bytes = sizeof(uint32_t) * minx;
+  //对每一行
+  for (int j = 0; j < h && y + j < _screen.height; j ++) {
+    //y+j乘屏幕宽度+x列得到内存中y+j行的首地址
+    memcpy(&fb[(y + j) * _screen.width + x], pixels, cp_bytes);//pixels是像素数组首地址
+    pixels += w;
   }
 }
 
