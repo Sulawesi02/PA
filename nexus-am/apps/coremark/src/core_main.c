@@ -46,17 +46,11 @@ void *iterate(void *pres) {
 	res->crcstate=0;
 
 	for (i=0; i<iterations; i++) {
-		printf("Iteration %d\n",i);
 		crc=core_bench_list(res,1);
-		printf("List CRC %04x\n",crc);
 		res->crc=crcu16(crc,res->crc);
-		printf("Total CRC %04x\n",res->crc);
 		crc=core_bench_list(res,-1);
-		printf("List CRC %04x\n",crc);
 		res->crc=crcu16(crc,res->crc);
-		printf("Total CRC %04x\n",res->crc);
 		if (i==0) res->crclist=res->crc;
-		printf("Matrix CRC %04x\n",crc);
 	}
 	return NULL;
 }
