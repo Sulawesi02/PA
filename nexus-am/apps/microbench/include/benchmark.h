@@ -17,8 +17,6 @@ extern "C" {
 #define REF_CPU    "i7-6700 @ 3.40GHz"
 #define REF_SCORE  100000
 
-#define SETTING_REF 1
-
 #ifdef SETTING_TEST
   #define SETTING 0
 #else

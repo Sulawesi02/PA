@@ -7,6 +7,8 @@ Setting *setting;
 
 static char *start;
 
+#define SETTING_REF 1
+
 #define ARR_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
 
 // The benchmark list
