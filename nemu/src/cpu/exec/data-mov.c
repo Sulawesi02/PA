@@ -46,9 +46,11 @@ make_EHelper(cltd) {
     // rtl_sext(&t1, &t0, 2); // AX符号扩展
     // reg_w(2) = (uint16_t) ((uint32_t)t1 >> 16); // 取高16位给DX
 
-    rtl_lr(&t0, reg_w(0), 2); // 获取AX
-    rtl_msb(&t1, &t0, 2); // 获取AX符号位
-    if(t0 == 0){
+    // 将AX符号扩展到DX:AX
+    rtl_lr(&t0, R_AX, 2); //加载AX到t0
+    rtl_sext(&t0, &t0, 2); //符号扩展t0
+    rtl_msb(&t1, &t0, 2); // 获取符号位
+    if(t1 == 0){
       reg_w(2) = 0;
     }
     else{
@@ -62,9 +64,11 @@ make_EHelper(cltd) {
     // rtl_sext(&t1, &t0, 4); // EAX符号扩展
     // reg_l(2) = (uint32_t) ((uint64_t)t1 >> 32); // 取高32位给EDX
     
-    rtl_lr(&t0, reg_l(0), 4); // 获取EAX
-    rtl_msb(&t1, &t0, 4); // 获取EAX符号位
-    if(t0 == 0){
+    // 将EAX符号扩展到EDX:EAX
+    rtl_lr(&t0, R_EAX, 4); //加载EAX到t0
+    rtl_sext(&t0, &t0, 4); //符号扩展t0
+    rtl_msb(&t1, &t0, 4); // 获取符号位
+    if(t1 == 0){
       reg_l(2) = 0;
     }
     else{
