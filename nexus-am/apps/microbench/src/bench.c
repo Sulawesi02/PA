@@ -160,3 +160,4 @@ uint32_t checksum(void *start, void *end) {
   hash += hash << 5;
   return hash;
 }
+
