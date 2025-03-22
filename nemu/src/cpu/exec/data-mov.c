@@ -76,10 +76,20 @@ make_EHelper(cwtl) {
     printf("AX: 0x%08x\n", reg_w(0));
     printf("EAX: 0x%08x\n", reg_l(0));
 
+    printf("111\n");
 
     t0 = reg_w(0); // 获取AX
+
+    printf("AX: 0x%08x\n", t0);
+
     rtl_sext(&t1, &t0, 2); // EAX符号扩展
+
+    printf("222\n");
+    printf("EAX: 0x%08x\n", t1);
+
     reg_l(0) = (uint32_t)t1;
+    
+    printf("333\n");
 
     printf("AL: 0x%08x\n", reg_b(0));
     printf("AH: 0x%08x\n", reg_b(4));
