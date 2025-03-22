@@ -59,18 +59,18 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    //TODO();
-    // 将AL扩展到AX
-    t0 = reg_b(0); // 获取AL
-    rtl_sext(&t1, &t0, 1); // AL符号扩展
-    reg_w(0) = (uint32_t)t1;
+    TODO();
+    // // 将AL扩展到AX
+    // t0 = reg_b(0); // 获取AL
+    // rtl_sext(&t1, &t0, 1); // AL符号扩展
+    // reg_w(0) = (uint32_t)t1;
   }
   else {
-    //TODO();
-    // 将EAX扩展到RAX
-    t0 = reg_l(0); // 获取EAX
-    rtl_sext(&t1, &t0, 4); // EAX符号扩展
-    reg_l(0) = (uint64_t)t1;
+    TODO();
+    // // 将EAX扩展到RAX
+    // t0 = reg_l(0); // 获取EAX
+    // rtl_sext(&t1, &t0, 4); // EAX符号扩展
+    // reg_l(0) = (uint64_t)t1;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
