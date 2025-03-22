@@ -103,7 +103,7 @@ make_EHelper(rol) {
 
   // 更新进位标志位(CF)
   // t1 和 1 进行与运算，得到最低位的结果
-  rtlreg_t t3 = 1;
+  rtl_li(&t3, 1);
   rtl_and(&t3, &t1, &t3);
   rtl_set_CF(&t3);
   

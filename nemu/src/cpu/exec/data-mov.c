@@ -61,6 +61,7 @@ make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     //TODO();
     // cbtw:将AL扩展到AX
+    printf("cbtw");
     t0 = reg_b(0); // 获取AL
     rtl_sext(&t1, &t0, 1); // AL符号扩展
     reg_w(0) = (uint16_t)t1;
@@ -68,6 +69,7 @@ make_EHelper(cwtl) {
   else {
     //TODO();
     // cwtl:将AX符号扩展到EAX
+    printf("cwtl");
     t0 = reg_w(0); // 获取AX
     rtl_sext(&t1, &t0, 2); // EAX符号扩展
     reg_l(0) = (uint32_t)t1;
