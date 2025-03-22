@@ -69,6 +69,14 @@ make_EHelper(cwtl) {
     //TODO();
     // cwtl:将AX符号扩展到EAX
     t0 = reg_w(0); // 获取AX
+
+    printf("AX: 0x%08x\n", t0);
+
+    rtl_sext(&t2, &t0, 4); // EAX符号扩展
+
+    printf("\n");
+    printf("EAX: 0x%08x\n", t2);
+
     reg_l(0) = (uint32_t)t2;
 
     printf("\n");
