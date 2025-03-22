@@ -140,8 +140,11 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   //TODO();
   rtl_li(&t1, 32 - width * 8);
+  printf("t1: 0x%08x\n", t1);
   rtl_shl(dest, src1, &t1);
+  printf("dest: 0x%08x\n", *dest);
   rtl_sar(dest, dest, &t1);
+  printf("dest: 0x%08x\n", *dest);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
