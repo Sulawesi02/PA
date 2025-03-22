@@ -69,10 +69,22 @@ make_EHelper(cwtl) {
   else {
     //TODO();
     // cwtl:将AX符号扩展到EAX
-    printf("cwtl");
+    printf("cwtl/n");
+    printf("AL: %x/n", reg_b(0));
+    printf("AH: %x/n", reg_b(4));
+    printf("AX: %x/n", reg_w(0));
+    printf("EAX: %x/n", reg_l(0));
+
+
     t0 = reg_w(0); // 获取AX
     rtl_sext(&t1, &t0, 2); // EAX符号扩展
     reg_l(0) = (uint32_t)t1;
+
+    printf("AL: %x/n", reg_b(0));
+    printf("AH: %x/n", reg_b(4));
+    printf("AX: %x/n", reg_w(0));
+    printf("EAX: %x/n", reg_l(0));
+    
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
