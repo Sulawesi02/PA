@@ -75,18 +75,24 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    //TODO();
     // // 将AL符号扩展到AH:AL
     // rtl_lr(&t0, reg_b(0), 1); // 获取AL
     // rtl_sext(&t1, &t0, 1);
     // reg_w(0) = (uint16_t)t1;
+    t1 = reg_b(0);
+    rtl_sext(&t0, &t1, 1);
+    reg_w(0) = t0;
   }
   else {
-    TODO();
+    //TODO();
     // // 将AX符号扩展到EAX
     // rtl_lr(&t0, reg_w(0), 2); // 获取AX
     // rtl_sext(&t1, &t0, 2);
     // reg_l(0) = (uint32_t)t1;
+    t1 = reg_w(0);
+    rtl_sext(&t0, &t1, 2);
+    reg_l(0) = t0;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
