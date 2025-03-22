@@ -36,7 +36,7 @@ make_EHelper(xor) {
   // 更新零标志位(ZF)和符号标志位(SF)
   rtl_update_ZFSF(&t0, id_dest->width);
   
-  // 逻辑运算清除进位标志位(CF)和溢出标志位(OF)
+  // 进位标志位(CF)和溢出标志位(OF)置零
   rtl_set_CF(&tzero);
   rtl_set_OF(&tzero);
   print_asm_template2(xor);
@@ -92,6 +92,26 @@ make_EHelper(shr) {
   print_asm_template2(shr);
 }
 
+// 循环左移
+// 等价于逻辑左移n位和逻辑右移(width * 8 - n)位进行或运算
+make_EHelper(rol) {
+  rtl_shl(&t0, &id_dest->val, &id_src->val);
+  rtl_shri(&t1, &id_dest->val, id_dest->width * 8 - id_src->val);
+  rtl_or(&t2, &t0, &t1);
+
+  operand_write(id_dest, &t2);
+
+  // 更新进位标志位(CF)
+  // t1 和 1 进行与运算，得到最低位的结果
+  // 然后将结果赋值给 t3
+  // 最后将 t3 赋值给 CF
+  // 这样就可以更新进位标志位(CF)了
+  rtlreg_t t3 = 1;
+  rtl_and(&t3, &t1, &t3);
+  rtl_set_CF(&t3);
+  
+  print_asm_template2(rol);
+}
 
 make_EHelper(setcc) {
   uint8_t subcode = decoding.opcode & 0xf;
