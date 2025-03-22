@@ -73,7 +73,7 @@ make_EHelper(cwtl) {
     // 将AL符号扩展到AH:AL
     rtl_lr(&t0, reg_b(0), 1); // 获取AL
     rtl_sext(&t1, &t0, 1);
-    reg_b(1) = t1;
+    reg_w(0) = t1;
   }
   else {
     //TODO();
