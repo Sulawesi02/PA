@@ -43,15 +43,15 @@ make_EHelper(cltd) {
     //TODO();
     // cwtl:将AX符号扩展到DX:AX
     t0 = reg_w(0);// 获取AX
-    rtl_sext(&t1, &t0, 2); // AX符号扩展
-    reg_w(2) = (uint16_t) ((uint32_t)t1 >> 16); // 取高16位给DX
+    rtl_sext(&t2, &t0, 2); // AX符号扩展
+    reg_w(2) = (uint16_t) ((uint32_t)t2 >> 16); // 取高16位给DX
   }
   else {
     //TODO();
     // cltd:将EAX符号扩展到EDX:EAX
     t0 = reg_l(0); // 获取EAX
-    rtl_sext(&t1, &t0, 4); // EAX符号扩展
-    reg_l(2) = (uint32_t) ((uint64_t)t1 >> 32); // 取高32位给EDX
+    rtl_sext(&t2, &t0, 4); // EAX符号扩展
+    reg_l(2) = (uint32_t) ((uint64_t)t2 >> 32); // 取高32位给EDX
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
@@ -63,8 +63,8 @@ make_EHelper(cwtl) {
     // cbtw:将AL扩展到AX
     printf("cbtw");
     t0 = reg_b(0); // 获取AL
-    rtl_sext(&t1, &t0, 2); // AL符号扩展
-    reg_w(0) = (uint16_t)t1;
+    rtl_sext(&t2, &t0, 2); // AL符号扩展
+    reg_w(0) = (uint16_t)t2;
   }
   else {
     //TODO();
@@ -82,12 +82,12 @@ make_EHelper(cwtl) {
 
     printf("AX: 0x%08x\n", t0);
 
-    rtl_sext(&t1, &t0, 4); // EAX符号扩展
+    rtl_sext(&t2, &t0, 4); // EAX符号扩展
 
     printf("\n");
-    printf("EAX: 0x%08x\n", t1);
+    printf("EAX: 0x%08x\n", t2);
 
-    reg_l(0) = (uint32_t)t1;
+    reg_l(0) = (uint32_t)t2;
 
     printf("\n");
 
