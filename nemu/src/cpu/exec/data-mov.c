@@ -75,20 +75,18 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    //TODO();
-    // 将AL符号扩展到AH:AL
-    rtl_lr(&t0, reg_b(0), 1); // 获取AL
-    rtl_sext(&t1, &t0, 1);
-    printf("t1: %x\n", t1);
-    reg_w(0) = (uint16_t)t1;
+    TODO();
+    // // 将AL符号扩展到AH:AL
+    // rtl_lr(&t0, reg_b(0), 1); // 获取AL
+    // rtl_sext(&t1, &t0, 1);
+    // reg_w(0) = (uint16_t)t1;
   }
   else {
-    //TODO();
-    // 将AX符号扩展到EAX
-    rtl_lr(&t0, reg_w(0), 2); // 获取AX
-    rtl_sext(&t1, &t0, 2);
-    printf("t1: %x\n", t1);
-    reg_l(0) = (uint32_t)t1;
+    TODO();
+    // // 将AX符号扩展到EAX
+    // rtl_lr(&t0, reg_w(0), 2); // 获取AX
+    // rtl_sext(&t1, &t0, 2);
+    // reg_l(0) = (uint32_t)t1;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
