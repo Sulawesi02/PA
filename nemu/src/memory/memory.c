@@ -14,21 +14,21 @@ uint8_t pmem[PMEM_SIZE];
 
 uint32_t paddr_read(paddr_t addr, int len) {
   int map_NO = is_mmio(addr);
-  if(map_NO){
-    return mmio_read(addr, len, map_NO);
+  if(map_NO == -1){
+    return pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
   }
   else{
-    return pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
+    return mmio_read(addr, len, map_NO);
   }
 }
 
 void paddr_write(paddr_t addr, int len, uint32_t data) {
   int map_NO = is_mmio(addr);
-  if(map_NO){
-    mmio_write(addr, len, data, map_NO);
+  if(map_NO == -1){
+    memcpy(guest_to_host(addr), &data, len);
   }
   else{
-    memcpy(guest_to_host(addr), &data, len);
+    mmio_write(addr, len, data, map_NO);
   }
 }
 
