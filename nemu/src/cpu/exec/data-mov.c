@@ -42,26 +42,26 @@ make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
     // 将AX符号扩展到DX:AX
-    rtl_lr(&t0, reg_w(0), 2); // 获取AX
-    rtl_msb(&t1, &t0, 2); // 获取AX符号位
-    if(t0 == 0){
-      reg_w(2) = 0;
-    }
-    else{
-      reg_w(2) = 0xffff;
-    }
+    // rtl_lr(&t0, reg_w(0), 2); // 获取AX
+    // rtl_msb(&t1, &t0, 2); // 获取AX符号位
+    // if(t0 == 0){
+    //   reg_w(2) = 0;
+    // }
+    // else{
+    //   reg_w(2) = 0xffff;
+    // }
   }
   else {
     //TODO();
     // 将EAX符号扩展到EDX:EAX
-    rtl_lr(&t0, reg_l(0), 4); // 获取EAX
-    rtl_msb(&t1, &t0, 4); // 获取EAX符号位
-    if(t0 == 0){
-      reg_l(2) = 0;
-    }
-    else{
-      reg_l(2) = 0xffffffff;
-    }
+    // rtl_lr(&t0, reg_l(0), 4); // 获取EAX
+    // rtl_msb(&t1, &t0, 4); // 获取EAX符号位
+    // if(t0 == 0){
+    //   reg_l(2) = 0;
+    // }
+    // else{
+    //   reg_l(2) = 0xffffffff;
+    // }
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
