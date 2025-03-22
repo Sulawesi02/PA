@@ -32,5 +32,10 @@ void _draw_sync() {
 }
 
 int _read_key() {
-  return _KEY_NONE;
+  if(inb(0x64)){// 判断是否有按键
+    return inl(0x60);// 读取按键
+  }
+  else{
+    return _KEY_NONE;
+  }
 }
