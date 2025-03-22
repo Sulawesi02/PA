@@ -45,6 +45,9 @@ void *iterate(void *pres) {
 	res->crcmatrix=0;
 	res->crcstate=0;
 
+	ee_printf("Total iterations: %u\n", iterations);  // 添加总迭代次数
+	ee_printf("Progress: 0%%");
+
 	for (i=0; i<iterations; i++) {
 		crc=core_bench_list(res,1);
 		res->crc=crcu16(crc,res->crc);
