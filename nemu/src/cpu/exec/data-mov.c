@@ -51,11 +51,12 @@ make_EHelper(cltd) {
     rtl_sext(&t0, &t0, 2); //符号扩展t0
     rtl_msb(&t1, &t0, 2); // 获取符号位
     if(t1 == 0){
-      reg_w(2) = 0;
+      rtl_li(&t1, 0);
     }
     else{
-      reg_w(2) = 0xffff;
+      rtl_li(&t1, 0xffff);
     }
+    rtl_sr(R_DX, 2, &t1); // 设置DX
   }
   else {
     //TODO();
@@ -68,12 +69,13 @@ make_EHelper(cltd) {
     rtl_lr(&t0, R_EAX, 4); //加载EAX到t0
     rtl_sext(&t0, &t0, 4); //符号扩展t0
     rtl_msb(&t1, &t0, 4); // 获取符号位
-    if(t1 == 0){
-      reg_l(2) = 0;
+    if(t1==0){
+      rtl_li(&t1, 0);
     }
     else{
-      reg_l(2) = 0xffffffff;
+      rtl_li(&t1, 0xffffffff);
     }
+    rtl_sr(R_EDX, 4, &t1); // 设置EDX
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
