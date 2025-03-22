@@ -50,7 +50,7 @@ void *iterate(void *pres) {
 	
 	for (i=0; i<iterations; i++) {
 		// 每完成1%输出进度（或调整这个值）
-		if (i % (iterations/100 + 1) == 0) { 
+		if (i % (iterations/1000 + 1) == 0) { 
 			ee_printf("\rProgress: %d%% (%d/%d)", 
 				(int)((i*100)/iterations), i, iterations);
 		}
