@@ -44,9 +44,12 @@ make_EHelper(iret) {
 uint32_t pio_read(ioaddr_t, int);
 void pio_write(ioaddr_t, int, uint32_t);
 
+// 将设备寄存器的数据送到CPU寄存器
 make_EHelper(in) {
-  TODO();
-
+  //TODO();
+  rtl_li(&t0, pio_read(id_src->val, id_dest->width));// 从id_src中读取数据，写入t0
+  operand_write(id_dest, &t0);// 将t0写入id_dest
+  
   print_asm_template2(in);
 
 #ifdef DIFF_TEST
@@ -54,9 +57,10 @@ make_EHelper(in) {
 #endif
 }
 
+// 将CPU寄存器的数据送到设备寄存器
 make_EHelper(out) {
-  TODO();
-
+  //TODO();
+  pio_write(id_dest->val, id_src->width, id_src->val);// 将id_src中的数据写入id_dest
   print_asm_template2(out);
 
 #ifdef DIFF_TEST
