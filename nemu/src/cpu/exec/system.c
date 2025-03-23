@@ -49,7 +49,6 @@ make_EHelper(in) {
   //TODO();
   rtl_li(&t0, pio_read(id_src->val, id_dest->width));// 从id_src中读取数据，写入t0
   operand_write(id_dest, &t0);// 将t0写入id_dest
-  
   print_asm_template2(in);
 
 #ifdef DIFF_TEST

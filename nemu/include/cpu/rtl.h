@@ -147,8 +147,8 @@ static inline void rtl_not(rtlreg_t* dest) {
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   //TODO();
-  uint32_t shift_amount  = 32 - width * 8;
-  rtl_shl(dest, src1, &shift_amount);
+  rtl_li(&t1, 32 - width * 8);
+  rtl_shl(dest, src1, &t1);
   rtl_sar(dest, dest, &t1);
 }
 
@@ -189,7 +189,7 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   *dest = (*src1 != 0 ? 1 : 0);
 }
 
-// 判断src1的符号位是否为1
+// 获得src1的符号位
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   //TODO();
