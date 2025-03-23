@@ -80,6 +80,10 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
 void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) {
   ModR_M m;
   m.val = instr_fetch(eip, 1);
+  
+  printf("ModR/M byte: 0x%x\n", m.val);
+  printf("mod: %d, reg: %d, rm: %d\n", m.mod, m.reg, m.R_M);
+  
   decoding.ext_opcode = m.opcode;
   if (reg != NULL) {
     reg->type = OP_TYPE_REG;
@@ -106,8 +110,10 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
   }
   else {
     load_addr(eip, &m, rm);
+    printf("Calculated address: 0x%x\n", rm->addr);
     if (load_rm_val) {
       rtl_lm(&rm->val, &rm->addr, rm->width);
+      printf("Loaded value: 0x%x\n", rm->val);
     }
   }
 }

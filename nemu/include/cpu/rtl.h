@@ -60,7 +60,9 @@ static inline void rtl_idiv(rtlreg_t* q, rtlreg_t* r, const rtlreg_t* src1_hi, c
 }
 
 static inline void rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
+  printf("Reading memory at address 0x%x with length %d\n", *addr, len);
   *dest = vaddr_read(*addr, len);
+  printf("Read value: 0x%x\n", *dest);
 }
 
 static inline void rtl_sm(rtlreg_t* addr, int len, const rtlreg_t* src1) {
