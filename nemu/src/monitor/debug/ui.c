@@ -118,16 +118,24 @@ static int cmd_info(char *args) {
   }
   
   if (strcmp(arg, "r") == 0) {
+    printf("32位寄存器状态:\n");
     for (int i = 0; i < 8; i++) {
       printf("%s:0x%08x\n", reg_name(i,4), reg_l(i));
     }
+    printf("\n");
+    printf("16位寄存器状态:\n");
     for (int i = 0; i < 8; i++) {
-      printf("%s:0x%08x\n", reg_name(i,2), reg_w(i));
+      printf("%s:0x%04x\n", reg_name(i,2), reg_w(i));
     }
+    printf("\n");
+    printf("8位寄存器状态:\n");
     for (int i = 0; i < 8; i++) {
-      printf("%s:0x%08x\n", reg_name(i,1), reg_b(i));
+      printf("%s:0x%02x\n", reg_name(i,1), reg_b(i));
     }
+    printf("\n");
     printf("eip:0x%08x\n", cpu.eip);
+    printf("\n");
+    printf("eflags:\n");
     printf("CF:%d\n",cpu.eflags.CF);
     printf("ZF:%d\n",cpu.eflags.ZF);
     printf("SF:%d\n",cpu.eflags.SF);
