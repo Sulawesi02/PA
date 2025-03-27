@@ -67,7 +67,7 @@ make_EHelper(cwtl) {
   }
   else {
     //TODO();
-    // cwtl:将AX符号扩展到EAX
+    // cwtl:将EAX扩展到RAX
     t0 = reg_w(0); // 获取AX
     rtl_sext(&t0, &t0, 2); // EAX符号扩展
     reg_l(0) = (uint32_t)t0;
