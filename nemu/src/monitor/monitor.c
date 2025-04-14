@@ -87,6 +87,9 @@ static inline void restart() {
   unsigned int init=2;
   memcpy(&cpu.eflags, &init, sizeof(cpu.eflags));
 
+  /* Set the initial cs register. */
+  cpu.cs = 8;
+
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif
