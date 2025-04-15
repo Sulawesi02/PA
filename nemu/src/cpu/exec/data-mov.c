@@ -19,7 +19,17 @@ make_EHelper(pop) {
 }
 
 make_EHelper(pusha) {
-  TODO();
+  //TODO();
+  // ESP的值会随着每次压栈而变化,所以先将ESP的值保存到t0中
+  t0 = cpu.esp;
+  rtl_push(&cpu.eax);
+  rtl_push(&cpu.ecx);
+  rtl_push(&cpu.edx);
+  rtl_push(&cpu.ebx);
+  rtl_push(&t0);
+  rtl_push(&cpu.ebp);
+  rtl_push(&cpu.esi);
+  rtl_push(&cpu.edi);
 
   print_asm("pusha");
 }
