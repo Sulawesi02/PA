@@ -19,6 +19,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
     Log("open file failed");
     return 0;
   }
+  Log("filename=%s,fd=%d",filename,fd);
   fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
   fs_close(fd);
 
