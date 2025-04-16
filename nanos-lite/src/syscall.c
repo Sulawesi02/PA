@@ -16,6 +16,9 @@ int sys_write(int fd, void *buf, size_t len){
     }
     return len;
   }
+  else if(fd >= 3){
+    return fs_write(fd, buf, len);
+  }
   return -1;
 }
 
@@ -41,7 +44,7 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r) = fs_read(a[1], (void*)a[2], a[3]);
       break;
     case SYS_write:
-      SYSCALL_ARG1(r) = fs_write(a[1], (void*)a[2], a[3]);
+      SYSCALL_ARG1(r) = sys_write(a[1], (void*)a[2], a[3]);
       break;
     case SYS_exit:
       _halt(a[1]);
