@@ -21,7 +21,8 @@ _RegSet* do_syscall(_RegSet *r) {
   a[2] = SYSCALL_ARG3(r);
   a[3] = SYSCALL_ARG4(r);
 
-  panic("a[0]:",a[0]);
+  // 打印a[0]
+  printf("syscall ID = %d\n", a[0]);
 
   switch (a[0]) {
     case SYS_none:
