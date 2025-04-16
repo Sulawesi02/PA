@@ -10,7 +10,6 @@ int sys_write(int fd,void *buf,size_t len){
     }
     return len;
   }
-  printf("111");
   return -1;
 }
 
