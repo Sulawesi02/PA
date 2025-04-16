@@ -31,6 +31,7 @@ extern void dispinfo_read(void *buf, off_t offset, size_t len);
 void init_fs() {
   // TODO: initialize the size of /dev/fb
   file_table[FD_FB].size = _screen.height * _screen.width * 4;
+  Log("FD_FB size=%d",file_table[FD_FB].size);
 }
 
 size_t fs_filesz(int fd) {

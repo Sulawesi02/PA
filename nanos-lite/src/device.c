@@ -19,12 +19,26 @@ void dispinfo_read(void *buf, off_t offset, size_t len) {
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
-  // 每个像素4字节
-  int x = (offset / 4) % _screen.width;// 计算列号
-  int y = (offset / 4) / _screen.width;// 计算行号
-  int w = len / 4;// 像素宽度
-  int h = 1;// 像素高度
-  _draw_rect((uint32_t *)buf, x, y, w, h);
+  int index = offset / 4;
+  int x1 = index % _screen.width;// 开始的列号
+  int y1 = index / _screen.width;// 开始的行号
+  int x2 = (index + len / 4) % _screen.width;// 结束的列号
+  int y2 = (index + len / 4) / _screen.width;// 结束的行号
+  if(y2 == y1) {
+    _draw_rect((uint32_t *)buf, x1, y1, x2 - x1, 1);
+    return;
+  }
+  else if(y2 - y1 == 1) {
+    _draw_rect((uint32_t *)buf, x1, y1, _screen.width - x1, 1);
+    _draw_rect((uint32_t *)buf + 4 * (_screen.width - x1), 0, y2, x2, 1);
+    return;
+  }
+  else{
+    _draw_rect((uint32_t *)buf, x1, y1, _screen.width - x1, 1);
+    _draw_rect((uint32_t *)buf + 4*(_screen.width - x1), 0, y1 + 1, _screen.width, y2 - y1 - 2);
+    _draw_rect((uint32_t *)buf + 4*(_screen.width - x1 + _screen.width*(y2 - y1 - 2)), 0, y2, x2, 1);
+    return;
+  }
 }
 
 void init_device() {
