@@ -96,48 +96,31 @@ ssize_t fs_read(int fd,void* buf,size_t len)
     }
 }
 
-ssize_t fs_write(int fd,void *buf, size_t len)
-{
-    //Log("Debug: cd fs_write");
-    assert(fd>0 && fd<NR_FILES);
-    if(fd<3)
-    {
-        Log("fd < 3 when use fs_write/n");
-        return 0;
-    }
-    int maxbyte=file_table[fd].size-file_table[fd].open_offset;
-    if(len>maxbyte)
-    {
-        if(fd==FD_FB)//VGA
-        {
-            fb_write(buf,file_table[fd].open_offset,maxbyte);
-        }
-        else
-        {
-            ramdisk_write(buf,
-                        file_table[fd].disk_offset+file_table[fd].open_offset,
-                        maxbyte);
-        }
-        //更新偏移量
-        file_table[fd].open_offset+=maxbyte;
-        return maxbyte;
-    }
-    else
-    {
-        if(fd==FD_FB)//VGA
-        {
-            fb_write(buf,file_table[fd].open_offset,len);
-        }
-        else
-        {
-            ramdisk_write(buf,
-                            file_table[fd].disk_offset+file_table[fd].open_offset,
-                            len);
-        }
-        //更新偏移量
-        file_table[fd].open_offset+=len;
-        return len;
-    }
+ssize_t fs_write(int fd, const void *buf, size_t len) {
+  assert(fd >= 0 && fd < NR_FILES);
+  int size = fs_filesz(fd) - file_table[fd].open_offset;// 文件剩余大小
+  if (size > len) {// 偏移量不能超过文件大小
+    size = len;
+  }
+  switch(fd) {
+    case FD_STDIN:
+      return 0;
+    case FD_STDOUT:
+    case FD_STDERR:
+      for (int i = 0; i < len; i++) {
+        _putc(((char *)buf)[i]);
+      }
+      break;
+    case FD_FB:// 显存
+      fb_write(buf, file_table[fd].open_offset, len);
+      file_table[fd].open_offset += len;
+      break;
+    default:
+      ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, size);
+      file_table[fd].open_offset += size;
+      break;
+  }
+  return size;
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
