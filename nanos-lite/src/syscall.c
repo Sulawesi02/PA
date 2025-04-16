@@ -26,7 +26,7 @@ _RegSet* do_syscall(_RegSet *r) {
       _halt(a[1]);
       break;
     case SYS_write:
-      Log("SYS_write received: fd=%d, buf=0x%x, len=%d", a[1], a[2], a[3]);
+      Log("111");
       SYSCALL_ARG1(r) = sys_write(a[1], (void*)a[2], a[3]);
       break;
     case SYS_brk:
