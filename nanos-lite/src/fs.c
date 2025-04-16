@@ -61,7 +61,7 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     case FD_FB:
       return 0;
     case FD_DISPINFO:// 屏幕信息
-      dispinfo_read(buf, file_table[fd].open_offset, len);
+      dispinfo_read(buf, file_table[fd].open_offset, size);
       file_table[fd].open_offset += len;
       break;
     default:
