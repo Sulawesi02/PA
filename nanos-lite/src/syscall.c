@@ -30,11 +30,12 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r) = 1;
       break;
     case SYS_exit:
+      printf("111");
       sys_exit(a[1]);
       break;
     case SYS_write:
       //SYSCALL_ARG1(r)=sys_write(a[1],(void*)a[2],a[3]);
-      printf("111");
+      printf("222");
       SYSCALL_ARG1(r)=1;
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
