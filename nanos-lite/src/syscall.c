@@ -3,7 +3,7 @@
 
 int sys_write(int fd,void *buf,size_t len){
   if(fd == 1 || fd == 2){
-    Log("sys_write: fd=%d, len=%d", fd, len);
+    Log("111");
     for(int i = 0; i < len; ++i){
       _putc(*((char *)buf + i));
     }
