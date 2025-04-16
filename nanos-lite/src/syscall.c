@@ -7,6 +7,7 @@ _RegSet *sys_exit(_RegSet *r) {
 }
 
 _RegSet *sys_write(_RegSet *r) {
+  printf("sys_write");
   // uintptr_t a[4];
   // a[0] = SYSCALL_ARG1(r);
   // a[1] = SYSCALL_ARG2(r);
