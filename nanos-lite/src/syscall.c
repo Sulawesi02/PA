@@ -26,6 +26,7 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r) = 1;
       break;
     case SYS_exit:
+      printf("111");
       _halt(a[1]);
       break;
     case SYS_write:
