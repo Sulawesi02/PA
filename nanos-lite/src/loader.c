@@ -21,9 +21,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   }
   Log("filename=%s,fd=%d",filename,fd);
   fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
-  Log("read file success");
   fs_close(fd);
-  Log("close file success");
 
   return (uintptr_t)DEFAULT_ENTRY;
 }

@@ -33,6 +33,7 @@ int main() {
   //uint32_t entry = loader(NULL, NULL);
   uint32_t entry = loader(NULL, "/bin/text");
   ((void (*)(void))entry)();
+  Log("Returned to address %x", entry);
 
   panic("Should not reach here");
 }
