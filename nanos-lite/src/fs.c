@@ -26,6 +26,7 @@ extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
 extern void fb_write(const void *buf, off_t offset, size_t len);
 extern void dispinfo_read(void *buf, off_t offset, size_t len);
+extern size_t events_read(void *buf, size_t len);
 
 
 void init_fs() {
@@ -59,6 +60,9 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     case FD_STDERR:
     case FD_FB:
       return 0;
+    case FD_EVENTS:// 事件
+      len = events_read(buf, len);
+      break;
     case FD_DISPINFO:// 屏幕信息
       dispinfo_read(buf, file_table[fd].open_offset, len);
       file_table[fd].open_offset += len;
