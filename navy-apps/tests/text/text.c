@@ -23,8 +23,6 @@ int main() {
 
   for (i = 500; i < 1000; i ++) {
     fscanf(fp, "%d", &n);
-    log("n = %d\n", n);
-    log("i = %d\n", i);
     assert(n == i + 1);
   }
 
