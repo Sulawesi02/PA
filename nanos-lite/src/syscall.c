@@ -1,9 +1,9 @@
 #include "common.h"
 #include "syscall.h"
 
-int sys_write(int fd,void *buf,size_t len){
+int sys_write(int fd, void *buf, size_t len){
   if(fd == 1 || fd == 2){
-    Log("111");
+    Log("sys_write: fd=%d, len=%d", fd, len);
     for(int i = 0; i < len; ++i){
       _putc(*((char *)buf + i));
     }
@@ -12,7 +12,7 @@ int sys_write(int fd,void *buf,size_t len){
   return -1;
 }
 
-int sys_brk(uintptr_t addr){
+int sys_brk(int addr){
   return 0;
 }
 
