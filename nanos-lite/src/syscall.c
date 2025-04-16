@@ -21,17 +21,17 @@ _RegSet* do_syscall(_RegSet *r) {
   a[2] = SYSCALL_ARG3(r);
   a[3] = SYSCALL_ARG4(r);
 
+  panic("a[0]:",a[0]);
+
   switch (a[0]) {
     case SYS_none:
       SYSCALL_ARG1(r) = 1;
       break;
     case SYS_write:
-      panic("111");
       SYSCALL_ARG1(r) = sys_write(a[1], (void*)a[2], a[3]);
       break;
     case SYS_exit:
-    panic("222");
-    _halt(a[1]);
+      _halt(a[1]);
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
