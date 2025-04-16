@@ -3,8 +3,10 @@
 
 int sys_write(int fd, void *buf, size_t n){
   if(fd == 1 || fd == 2){
-    for(int i = 0; i < n; i++){
-      _putc(*((char*)buf + i));
+    char c;
+    for(int i=0;i<n;++i){
+      memcpy(&c,buf+i,1);
+      _putc(c);
     }
     return n;
   }
