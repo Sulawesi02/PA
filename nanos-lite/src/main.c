@@ -31,7 +31,6 @@ int main() {
   init_fs();
 
   //uint32_t entry = loader(NULL, NULL);
-  Log("Loading program from ramdisk...");
   uint32_t entry = loader(NULL, "/bin/text");
   ((void (*)(void))entry)();
 
