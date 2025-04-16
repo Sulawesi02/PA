@@ -1,18 +1,33 @@
 #include "common.h"
 #include "syscall.h"
 
-int sys_write(int fd,void *buf,size_t len){
-  if(fd==1||fd==2){
-    char c;
-    for(int i=0;i<len;++i){
-      memcpy(&c,buf+i,1);
-      _putc(c);
-    }
-    return len;
-  }
-  return -1;
+_RegSet *sys_exit(_RegSet *r) {
+  _halt(0);
+  return NULL;
 }
 
+_RegSet *sys_write(_RegSet *r) {
+  // uintptr_t a[4];
+  // a[0] = SYSCALL_ARG1(r);
+  // a[1] = SYSCALL_ARG2(r);
+  // a[2] = SYSCALL_ARG3(r);
+  // a[3] = SYSCALL_ARG4(r);
+  // int fd = a[1];
+  // char *buf = (char *)a[2];
+  // int len = a[3];
+  // int ret = 0;
+  // if (fd == 1 || fd == 2) {
+  //   while (len > 0) {
+  //     _putc(*buf);
+  //     buf++;
+  //     len--;
+  //     ret++;
+  //   }
+  //   SYSCALL_ARG1(r) = ret;
+  //   return len;
+  // }
+  return NULL;
+}
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
@@ -25,10 +40,10 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r) = 1;
       break;
     case SYS_exit:
-      _halt(a[1]);
+      return sys_exit(r);
       break;
     case SYS_write:
-      SYSCALL_ARG1(r) = sys_write(a[1], (void*)a[2], a[3]);
+      return sys_write(r);
       break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

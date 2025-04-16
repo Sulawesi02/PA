@@ -18,7 +18,6 @@ int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
 }
 
 void _exit(int status) {
-  printf("111");
   _syscall_(SYS_exit, status, 0, 0);
 }
 
