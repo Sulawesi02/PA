@@ -10,7 +10,6 @@ int sys_write(int fd,void *buf,size_t len){
     }
     return len;
   }
-  else panic("Unhandled fd=%d in sys_write",fd);
   return -1;
 }
 
