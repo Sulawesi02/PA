@@ -12,7 +12,6 @@ write (fd, buf, cnt)
 #ifdef REENTRANT_SYSCALLS_PROVIDED
   return _write_r (_REENT, fd, buf, cnt);
 #else
-  printf("555");
   return _write (fd, buf, cnt);
 #endif
 }
