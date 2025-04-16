@@ -3,6 +3,7 @@
 
 int sys_write(int fd,void *buf,size_t len){
   if(fd == 1 || fd == 2){
+    Log("sys_write: fd=%d, len=%d", fd, len);
     for(int i = 0; i < len; ++i){
       _putc(*((char *)buf + i));
     }
@@ -29,7 +30,7 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r) = sys_write(a[1], (void*)a[2], a[3]);
       break;
     case SYS_brk:
-      return 0; // 总是成功
+    SYSCALL_ARG1(r) = 0; // 总是成功
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
