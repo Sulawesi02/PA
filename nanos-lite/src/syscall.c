@@ -1,13 +1,16 @@
 #include "common.h"
 #include "syscall.h"
 
-int sys_write(int fd, void *buf, size_t n){
-  if(fd == 1 || fd == 2){
-    for(int i = 0; i < n; i++){
-      _putc(*((char*)buf + i));
+int sys_write(int fd,void *buf,size_t len){
+  if(fd==1||fd==2){
+    char c;
+    for(int i=0;i<len;++i){
+      memcpy(&c,buf+i,1);
+      _putc(c);
     }
-    return n;
+    return len;
   }
+  else panic("Unhandled fd=%d in sys_write",fd);
   return -1;
 }
 
