@@ -50,10 +50,6 @@ int fs_open(const char *pathname, int flags, int mode) {
 
 ssize_t fs_read(int fd, void *buf, size_t len) {
   assert(fd >= 0 && fd < NR_FILES);
-  int size = fs_filesz(fd) - file_table[fd].open_offset;// 文件剩余大小
-  if (size > len) {// 偏移量不能超过文件大小
-    size = len;
-  }
   switch(fd) {
     case FD_STDIN:
     case FD_STDOUT:
@@ -61,22 +57,21 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     case FD_FB:
       return 0;
     case FD_DISPINFO:// 屏幕信息
-      dispinfo_read(buf, file_table[fd].open_offset, size);
+      dispinfo_read(buf, file_table[fd].open_offset, len);
       file_table[fd].open_offset += len;
       break;
     default:
-      ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, size);
-      file_table[fd].open_offset += size;
+      if (file_table[fd].open_offset + len > fs_filesz(fd)) {
+        len = fs_filesz(fd) - file_table[fd].open_offset;// 偏移量不能超过文件大小
+      }
+      ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+      file_table[fd].open_offset += len;
   }
-  return size;
+  return len;
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len) {
   assert(fd >= 0 && fd < NR_FILES);
-  int size = fs_filesz(fd) - file_table[fd].open_offset;// 文件剩余大小
-  if (size > len) {// 偏移量不能超过文件大小
-    size = len;
-  }
   switch(fd) {
     case FD_STDIN:
       return 0;
@@ -91,11 +86,14 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
       file_table[fd].open_offset += len;
       break;
     default:
-      ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, size);
-      file_table[fd].open_offset += size;
+      if (file_table[fd].open_offset + len > fs_filesz(fd)) {
+        len = fs_filesz(fd) - file_table[fd].open_offset;// 偏移量不能超过文件大小
+      }
+      ramdisk_write(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+      file_table[fd].open_offset += len;
       break;
   }
-  return size;
+  return len;
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
