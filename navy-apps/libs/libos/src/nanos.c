@@ -32,15 +32,15 @@ int _write(int fd, void *buf, size_t count){
 
 void *_sbrk(intptr_t increment){
   extern char end;
-  static uintptr_t probreak=(uintptr_t)&end;//初始化pb
-  uintptr_t probreak_new=probreak+increment;
-  int r=_syscall_(SYS_brk,probreak_new,0,0);//系统调用
-  if(r==0){//分配成功
-    uintptr_t temp=probreak;//旧的pb位置
-    probreak=probreak_new;//更新pb
-    return (void*)temp;
+  static uintptr_t old_break = (uintptr_t)&end;
+  uintptr_t new_break = old_break + increment;
+  if(_syscall_(SYS_brk, new_break, 0, 0) == 0){
+    uintptr_t prev_brk = old_break;
+    old_break = new_break;
+    return (void *)prev_brk;
   }
-  return (void *)-1;//分配失败
+
+  return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
