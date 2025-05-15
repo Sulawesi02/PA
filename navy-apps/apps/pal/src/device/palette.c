@@ -230,6 +230,7 @@ PAL_FadeIn(
       //
       Log("time = %d, iDelay = %d, j = %d\n", time, iDelay, j);
       j = (int)(time - SDL_GetTicks()) / iDelay / 10;
+      Log("j = %d\n", j);
       if (j < 0)
       {
          break;
