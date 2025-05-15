@@ -78,20 +78,17 @@ PAL_GameMain(
    //
    // Show the opening menu.
    //
-   Log("Show the opening menu.\n");
    gpGlobals->bCurrentSaveSlot = (BYTE)PAL_OpeningMenu();
 
    //
    // Initialize game data and set the flags to load the game resources.
    //
-   Log("Current save slot: %d\n", gpGlobals->bCurrentSaveSlot);
    PAL_InitGameData(gpGlobals->bCurrentSaveSlot);
 
    //
    // Run the main game loop.
    //
    dwTime = SDL_GetTicks();
-   Log("Game start at %d.\n", dwTime);
 
    while (TRUE)
    {
