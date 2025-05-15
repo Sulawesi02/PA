@@ -230,7 +230,10 @@ PAL_FadeIn(
       //
       // Set the current palette...
       //
-      if (iDelay == 1) iDelay = 1;
+      
+      if (iDelay == 1) {
+         printf("iDelay == 1\n");
+      }
       j = (int)(time - SDL_GetTicks()) / iDelay / 10;
       if (j < 0)
       {
