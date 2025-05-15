@@ -93,17 +93,13 @@ PAL_OpeningMenu(
    //
    // Play the background music
    //
-   Log("Opening menu.\n");
    PAL_PlayMUS(RIX_NUM_OPENINGMENU, TRUE, 1);
 
    //
    // Draw the background
    //
-   Log("Draw the background.\n");
    PAL_DrawOpeningMenuBackground();
-   Log("Draw the background done.\n");
    PAL_FadeIn(0, FALSE, 1);
-   Log("Fade in done.\n");
 
    while (TRUE)
    {
