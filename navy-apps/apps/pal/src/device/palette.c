@@ -217,20 +217,18 @@ PAL_FadeIn(
    //
    // Get the new palette...
    //
-   Log("PAL_FadeIn: palette %d, night %d, delay %d\n", iPaletteNum, fNight, iDelay);
    palette = PAL_GetPalette(iPaletteNum, fNight);
 
    //
    // Start fading in...
    //
-   Log("PAL_FadeIn: start fading in...\n");
    time = SDL_GetTicks() + iDelay * 10 * 60;
-   Log("PAL_FadeIn: time = %d\n", time);
    while (TRUE)
    {
       //
       // Set the current palette...
       //
+      Log("time = %d, iDelay = %d, j = %d\n", time, iDelay, j);
       j = (int)(time - SDL_GetTicks()) / iDelay / 10;
       if (j < 0)
       {
