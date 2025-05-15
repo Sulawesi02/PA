@@ -147,6 +147,7 @@ PAL_Init(
    Log("PAL_InitInput success");
    PAL_InitResources();
    Log("PAL_InitResources success");
+   Log("PAL_InitResources success222");
    SOUND_OpenAudio();
    Log("SOUND_OpenAudio success");
 
