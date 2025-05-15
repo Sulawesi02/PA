@@ -162,10 +162,7 @@ PAL_FadeOut(
       //
       // Set the current palette...
       //
-      if (iDelay == 1) {
-         j = (int)(time - SDL_GetTicks()) / iDelay / 10;
-      }
-      else if (iDelay == 2) {
+      if (TRUE) {
          j = (int)(time - SDL_GetTicks()) / iDelay / 10;
       }
       if (j < 0)
@@ -234,7 +231,7 @@ PAL_FadeIn(
       // Set the current palette...
       //
       
-      if (iDelay == 1) {
+      if (TRUE) {
          j = (int)(time - SDL_GetTicks()) / iDelay / 10;
       }
       if (j < 0)
