@@ -559,7 +559,7 @@ main_loop() {
    //
    // Run the main game routine
    //
-   printf("main_loop: calling PAL_GameMain");
+   log("main_loop: calling PAL_GameMain");
    PAL_GameMain();
 
    //
