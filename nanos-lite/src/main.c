@@ -35,9 +35,7 @@ int main() {
   //uint32_t entry = loader(NULL, "/bin/bmptest");
   //uint32_t entry = loader(NULL, "/bin/events");
   uint32_t entry = loader(NULL, "/bin/pal");
-  printf("Running /bin/pal...");
   ((void (*)(void))entry)();
-  printf("Returned from /bin/pal");
 
   panic("Should not reach here");
 }
