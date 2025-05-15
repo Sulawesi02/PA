@@ -162,8 +162,7 @@ PAL_FadeOut(
       //
       // Set the current palette...
       //
-      printf("iDelay = %d\n", iDelay);
-      j = (int)(time - SDL_GetTicks()) / iDelay / 10;
+      j = (int)(time - SDL_GetTicks()) / 1 / 10;
       if (j < 0)
       {
          break;
@@ -229,8 +228,7 @@ PAL_FadeIn(
       //
       // Set the current palette...
       //
-      printf("iDelay = %d\n", iDelay);
-      j = (int)(time - SDL_GetTicks()) / iDelay / 10;
+      j = (int)(time - SDL_GetTicks()) / 1 / 10;
       if (j < 0)
       {
          break;
