@@ -25,7 +25,8 @@ uintptr_t loader(_Protect *as, const char *filename) {
   int size = fs_filesz(fd);// 获取文件大小
   int page_num = (size + PGSIZE - 1) / PGSIZE;// 页面数
 
-  void *pa, *va = DEFAULT_ENTRY;
+  void *pa = NULL;
+  void *va = DEFAULT_ENTRY;
   for(int i = 0; i < page_num; i++){
     pa = new_page();
     _map(as, va, pa);
