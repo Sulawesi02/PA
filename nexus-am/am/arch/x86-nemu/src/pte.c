@@ -66,15 +66,14 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
-  int iterator;
   uint32_t *pgdir = p->ptr;//页目录表基址
   uint32_t pd_idx = (uint32_t)va >> 22;// 页目录索引
   uint32_t pt_idx = (uint32_t)va >> 12 & 0x3ff;// 页表索引
   
   if ((pgdir[pd_idx] & 1) == 0) {
     pgdir[pd_idx] = (uint32_t)(palloc_f()) | PTE_P;
-    for (iterator = 0; iterator < NR_PTE; iterator++)
-        ((uint32_t *)(pgdir[pd_idx]))[iterator] = 0;
+    for (int i = 0; i < NR_PTE; i++)
+        ((uint32_t *)(pgdir[pd_idx]))[i] = 0;
   }
   uint32_t pgtab = pgdir[pd_idx];// 页表基址
   ((uint32_t *)(pgtab & 0xFFFFF000))[pt_idx] = (uint32_t)pa | PTE_P;
