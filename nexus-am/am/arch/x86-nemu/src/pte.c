@@ -70,7 +70,7 @@ void _map(_Protect *p, void *va, void *pa) {
   uint32_t pd_idx = (uint32_t)va >> 22;// 页目录索引
   uint32_t pt_idx = (uint32_t)va >> 12 & 0x3ff;// 页表索引
   
-  if ((pgdir[pd_idx] & 1) == 0) {
+  if (!(pgdir[pd_idx] & PTE_P)) {
     pgdir[pd_idx] = (uint32_t)(palloc_f()) | PTE_P;
     for (int i = 0; i < NR_PTE; i++)
         ((uint32_t *)(pgdir[pd_idx]))[i] = 0;
