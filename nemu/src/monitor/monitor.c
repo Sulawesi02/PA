@@ -83,12 +83,17 @@ static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
   
-  /* Set the initial EFLAGS register. */
+  // 初始化 eflags 为 2.
   unsigned int init=2;
   memcpy(&cpu.eflags, &init, sizeof(cpu.eflags));
 
-  /* Set the initial cs register. */
+  // 初始化 cs 为 8.
   cpu.cs = 8;
+
+  // 初始化 cr0 为 0x6000 0011.
+  cpu.cr0 = 0x60000011;
+  // 初始化 cr3 为 0.
+  cpu.cr3 = 0;
 
 #ifdef DIFF_TEST
   init_qemu_reg();
