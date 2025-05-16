@@ -66,24 +66,20 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
-  PDE *pgdir = (PDE*)p->ptr;//页目录表基址
-  uint32_t pd_idx = ((uint32_t)va >> 22) & 0x3ff;// 页目录项索引
-  PDE *pde = pgdir + (pd_idx * 4);// 页目录项
-  PTE *pgtab = NULL;// 页表基址
-
-  if((*pde & PTE_P) == 0){// 如果页目录项不存在
-    pgtab = (PTE*)palloc_f();//申请一个页
-    for(int i = 0; i < NR_PTE; i++){//初始化页表
-      pgtab[i] = 0;
-    }
-    *pde = (uintptr_t)pgtab | PTE_P;//填写页目录项，添加映射
+  int iterator;
+  uint32_t *PageDirectory = p->ptr;
+  uint32_t DIR = (uint32_t)va >> 22;
+  uint32_t PAGE = (uint32_t)va >> 12 & 0x000003FF;
+  
+  if ((PageDirectory[DIR] & 1) == 0) {
+    PageDirectory[DIR] = (uint32_t)(palloc_f()) | PTE_P;
+    for (iterator = 0; iterator < NR_PTE; iterator++)
+        ((uint32_t *)(PageDirectory[DIR]))[iterator] = 0;
   }
-
-  pgtab = (PTE*)(*pde & ~0xfff);//获取页表基址
-  uint32_t pt_idx = ((uint32_t)va >> 12) & 0x3ff;// 页表项索引
-  PTE *pte = pgtab + (pt_idx * 4);// 页表项
-  *pte = (uintptr_t)pa | PTE_P;//填写页表项，添加映射
+  uint32_t PageTable = PageDirectory[DIR];
+  ((uint32_t *)(PageTable & 0xFFFFF000))[PAGE] = (uint32_t)pa | PTE_P;
 }
+
 
 void _unmap(_Protect *p, void *va) {
 }
