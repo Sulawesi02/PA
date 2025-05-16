@@ -311,6 +311,24 @@ make_DHelper(out_a2dx) {
 #endif
 }
 
+make_DHelper(mov_r2cr) {
+  decode_op_rm(eip, id_src, true, id_dest, false);
+  id_dest->width = 4;
+  id_src->width = 4;
+#ifdef DEBUG
+  snprintf(id_dest->str, OP_STR_SIZE, "%%cr%u", id_dest->reg);
+#endif
+}
+
+make_DHelper(mov_cr2r) {
+  decode_op_rm(eip, id_dest, false, id_src, false);
+  id_src->width = 4;
+  id_dest->width = 4;
+#ifdef DEBUG
+  snprintf(id_src->str, OP_STR_SIZE, "%%cr%u", id_src->reg);
+#endif
+}
+
 void operand_write(Operand *op, rtlreg_t* src) {
   if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }
   else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, op->width, src); }

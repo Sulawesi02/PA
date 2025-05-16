@@ -123,16 +123,19 @@ static int cmd_info(char *args) {
       printf("%s:0x%08x\n", reg_name(i,4), reg_l(i));
     }
     printf("\n");
+    
     printf("16位寄存器状态:\n");
     for (int i = 0; i < 8; i++) {
       printf("%s:0x%04x\n", reg_name(i,2), reg_w(i));
     }
     printf("\n");
+    
     printf("8位寄存器状态:\n");
     for (int i = 0; i < 8; i++) {
       printf("%s:0x%02x\n", reg_name(i,1), reg_b(i));
     }
     printf("\n");
+    
     printf("eip:0x%08x\n", cpu.eip);
     printf("\n");
     printf("eflags:\n");
@@ -141,6 +144,11 @@ static int cmd_info(char *args) {
     printf("SF:%d\n",cpu.eflags.SF);
     printf("IF:%d\n",cpu.eflags.IF);
     printf("OF:%d\n",cpu.eflags.OF);
+    printf("\n");
+
+    printf("cr0:0x%08x\n", cpu.cr0);
+    printf("cr3:0x%08x\n", cpu.cr3);
+    printf("\n");
 
   } else if (strcmp(arg,"w") == 0){
     print_watchpoints();// 打印所有监视点信息
