@@ -39,14 +39,15 @@ make_EHelper(mov_cr2r) {
   //TODO();
   // 将控制寄存器(cr0/cr3)的值移动到通用寄存器(r32)
   if (id_src->reg == 0) {
-    operand_write(id_dest, &cpu.cr0);
+    t0 = cpu.cr0;
   }
   else if (id_src->reg == 3) {
-    operand_write(id_dest, &cpu.cr3);
+    t0 = cpu.cr3;
   }
   else {
     panic("未实现的控制寄存器: CR%d", id_src->reg);
   }
+  operand_write(id_dest, &t0);
   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
 
 #ifdef DIFF_TEST
