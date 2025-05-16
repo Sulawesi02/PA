@@ -13,28 +13,18 @@ ssize_t fs_read(int fd, void *buf, size_t len);
 int fs_close(int fd);
 
 uintptr_t loader(_Protect *as, const char *filename) {
-  //TODO();
-  // ramdisk_read(DEFAULT_ENTRY, 0, RAMDISK_SIZE);
   int fd = fs_open(filename, 0, 0);
-  if(fd == -1){
-    Log("open file failed");
-    return 0;
-  }
-  // Log("filename=%s,fd=%d",filename,fd);
-  // fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
-  int size = fs_filesz(fd);// 获取文件大小
-  int page_num = (size + PGSIZE - 1) / PGSIZE;// 页面数
-
-  void *pa = NULL;
-  void *va = DEFAULT_ENTRY;
-  for(int i = 0; i < page_num; i++){
-    pa = new_page();
-    _map(as, va, pa);
-    fs_read(fd, pa, PGSIZE);
-    va += PGSIZE;
+  uint32_t i = 0;
+  void *pageptr;
+  for(i = 0; i < fs_filesz(fd); i += 0x1000) {
+    pageptr = new_page();
+    _map(as, (void *)(0x8048000 + i), pageptr);
+    fs_read(fd, pageptr, ((fs_filesz(fd) - i >= 0x1000) ? 0x1000 : fs_filesz(fd) - i));
   }
   
   fs_close(fd);
 
+  new_page();
+  
   return (uintptr_t)DEFAULT_ENTRY;
 }
