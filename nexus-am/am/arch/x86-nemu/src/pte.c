@@ -71,12 +71,13 @@ void _map(_Protect *p, void *va, void *pa) {
   uint32_t pt_idx = (uint32_t)va >> 12 & 0x3ff;// 页表索引
   
   if (!(pgdir[pd_idx] & PTE_P)) {
-    pgdir[pd_idx] = (uint32_t)(palloc_f()) | PTE_P;
+    PTE *pgtab = (PTE *)palloc_f();
     for (int i = 0; i < NR_PTE; i++)
         ((uint32_t *)(pgdir[pd_idx]))[i] = 0;
+    pgdir[pd_idx] = (uint32_t)pgtab | PTE_P;
   }
-  uint32_t pgtab = pgdir[pd_idx];// 页表基址
-  ((uint32_t *)(pgtab & 0xFFFFF000))[pt_idx] = (uint32_t)pa | PTE_P;
+  uint32_t *pgtab = (PTE *)(pgdir[pd_idx] & ~0xfff);// 页表基址
+  pgtab[pt_idx] = (uint32_t)pa | PTE_P;
 }
 
 
