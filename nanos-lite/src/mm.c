@@ -16,6 +16,27 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uint32_t new_brk) {
+  if (current->cur_brk == 0) {
+    current->cur_brk = current->max_brk = new_brk;
+  }
+  else {
+    if (new_brk > current->max_brk) {
+      // 计算起始地址和结束地址对应的页边界
+      uintptr_t start_page = PGROUNDUP(current->max_brk);
+      uintptr_t end_page = PGROUNDUP(new_brk);
+      // 如果new_brk不是页对齐的，需要额外映射一页
+      if ((new_brk & (PGSIZE-1)) != 0) {
+        end_page += PGSIZE;
+      }
+      // 按页映射内存区域
+      for (uintptr_t va = start_page; va < end_page; va += PGSIZE) {
+        void *pa = new_page();
+        _map(&current->as, (void*)va, pa);
+      }
+      current->max_brk = new_brk;
+    }
+    current->cur_brk = new_brk;
+  }
   return 0;
 }
 

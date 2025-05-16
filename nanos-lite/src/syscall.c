@@ -6,6 +6,7 @@ ssize_t fs_read(int fd, void *buf, size_t len);
 ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
 int fs_close(int fd);
+int mm_brk(uint32_t new_brk);
 
 int sys_write(int fd, void *buf, size_t len){
   if(fd == 1 || fd == 2){
@@ -23,7 +24,8 @@ int sys_write(int fd, void *buf, size_t len){
 }
 
 int sys_brk(int addr){
-  return 0;
+  //return 0;
+  return mm_brk(addr);
 }
 
 _RegSet* do_syscall(_RegSet *r) {
