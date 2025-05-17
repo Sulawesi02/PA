@@ -26,18 +26,18 @@ void load_prog(const char *filename) {
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
 
+extern int current_game;
 _RegSet* schedule(_RegSet *prev) {
   if(current != NULL){
     current->tf = prev;
   }
   else{
-    current = &pcb[0];
+    current = &pcb[current_game];
   }
   // current = &pcb[0];
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   static int count = 0;
   static const int max_count = 1000;
-  extern int current_game;
   // if(current == &pcb[0]){
   //   count++;
   //   if(count == max_count){
