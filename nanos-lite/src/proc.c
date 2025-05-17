@@ -48,8 +48,6 @@ _RegSet* schedule(_RegSet *prev) {
     current = &pcb[current_game];
   }
 
-
   _switch(&current->as);
   return current->tf;
 }
-
