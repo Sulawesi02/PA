@@ -30,8 +30,24 @@ _RegSet* schedule(_RegSet *prev) {
   if(current != NULL){
     current->tf = prev;
   }
+  else{
+    current = &pcb[0];
+  }
   // current = &pcb[0];
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  static int count = 0;
+  static const int max_count = 1000;
+  if(current == &pcb[0]){
+    count++;
+    if(count == max_count){
+      count = 0;
+      current = &pcb[1];
+    }
+  }
+  else if(current == &pcb[1]){
+    current = &pcb[0];
+  }
+
   _switch(&current->as);
   return current->tf;
 }
