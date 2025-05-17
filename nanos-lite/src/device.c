@@ -8,38 +8,27 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
+int current_game = 0; // 当前游戏的进程号
 size_t events_read(void *buf, size_t len) {
-  //return 0;
-  int key=_read_key();
-  bool down = false;
+  int key = _read_key();
+  bool is_down = false;
   if (key & 0x8000) {
-        key ^= 0x8000;
-        down = true;
+    key ^= 0x8000;
+    is_down = true;
   }
-  char temp[20];
-  if(down && key == _KEY_F12) {
-      extern void switch_current_game();
-      switch_current_game();
-      Log("key down:_KEY_F12, switch current game!");
-   }
-  if (key != _KEY_NONE)
-  {
-    if(down){
-        sprintf(temp,"kd %s\n",keyname[key]);}
-    else{
-        sprintf(temp,"ku %s\n",keyname[key]);}
+  if(key == _KEY_NONE){
+    sprintf(buf, "t %d\n", _uptime());//时钟事件
   }
-  else{
-    sprintf(temp,"t %d\n",_uptime());}
-
-  if(strlen(temp)<=len)
-  {
-    strncpy((char*)buf,temp,len);
-    return strlen(temp);
+  else {
+    sprintf(buf, "%s %s\n", is_down?"kd":"ku", keyname[key]);//按键事件
+    if(key == _KEY_F12 && is_down){// 按下F12，切换游戏
+      current_game = (current_game == 0 ? 2 : 0);
+      Log("current_game = %d", current_game);
+    }  
   }
-  Log("strlen(event)=%d>len=%d",strlen(temp),len);
-  return 0;
+  return strlen(buf);
 }
+
 static char dispinfo[128] __attribute__((used));
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
