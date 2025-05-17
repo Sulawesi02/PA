@@ -28,41 +28,28 @@ void load_prog(const char *filename) {
 
 extern int current_game;
 _RegSet* schedule(_RegSet *prev) {
-  if(current != NULL){
-    current->tf = prev;
-  }
-  else{
-    current = &pcb[current_game];
-  }
+  current->tf = prev;
   // current = &pcb[0];
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   static int count = 0;
   static const int max_count = 1000;
-  // if(current == &pcb[0]){
-  //   count++;
-  //   if(count == max_count){
-  //     count = 0;
-  //     current = &pcb[1];
-  //   }
-  // }
-  // else if(current == &pcb[1]){
-  //   current = &pcb[0];
-  // }
 
-  // 根据current_game选择游戏进程
-  PCB *game_proc = (current_game == 0) ? &pcb[0] : &pcb[2];
-  if(current == game_proc){
+  if(current == &pcb[current_game]){
+    //打印当前游戏名以及运行次数
+    Log("game: %s, count: %d", current_game == 0? "pal" : "videotest", count);
     count++;
     if(count == max_count){
       count = 0;
       current = &pcb[1];
+      Log("run hello \n");
     }
   }
   else if(current == &pcb[1]){
-    current = game_proc;
+    current = &pcb[current_game];
   }
 
 
   _switch(&current->as);
   return current->tf;
 }
+
