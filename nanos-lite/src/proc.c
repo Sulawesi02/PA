@@ -37,7 +37,21 @@ _RegSet* schedule(_RegSet *prev) {
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   static int count = 0;
   static const int max_count = 1000;
-  if(current == &pcb[0]){
+  extern int current_game;
+  // if(current == &pcb[0]){
+  //   count++;
+  //   if(count == max_count){
+  //     count = 0;
+  //     current = &pcb[1];
+  //   }
+  // }
+  // else if(current == &pcb[1]){
+  //   current = &pcb[0];
+  // }
+
+  // 根据current_game选择游戏进程
+  PCB *game_proc = (current_game == 0) ? &pcb[0] : &pcb[2];
+  if(current == game_proc){
     count++;
     if(count == max_count){
       count = 0;
@@ -45,8 +59,9 @@ _RegSet* schedule(_RegSet *prev) {
     }
   }
   else if(current == &pcb[1]){
-    current = &pcb[0];
+    current = game_proc;
   }
+
 
   _switch(&current->as);
   return current->tf;
