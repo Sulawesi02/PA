@@ -85,18 +85,19 @@ void _map(_Protect *p, void *va, void *pa) {
 void _unmap(_Protect *p, void *va) {
 }
 
-_RegSet* _umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char
-  *const argv[], char *const envp[]) {
-  // 使⽤PCB结构存储陷阱帧指针，PCB位于⽤⼾栈的起始处
-  struct { _RegSet *tf; } *pcb = ustack.start;
-  uint32_t *stack = (uint32_t *)(ustack.end - 4);
-  // 设置_start()函数的栈帧，填充3个0
-  for (int i = 0; i < 3; i++)
-  *stack-- = 0;
-  // 计算陷阱帧的位置
-  pcb->tf = (void *)(stack - sizeof(_RegSet));
-  pcb->tf->eflags = 0x2 | (1 << 9);
-  pcb->tf->cs = 8;
-  pcb->tf->eip = (uintptr_t)entry;
-  return pcb->tf;
-  }
+_RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
+  // 在用户栈底部构造陷阱帧
+  uint32_t *stack_top = (uint32_t*)ustack.end;
+  
+  // 为_start()创建参数占位空间（argc, argv, envp）
+  *--stack_top = 0;          // envp = NULL
+  *--stack_top = 0;          // argv = NULL
+  *--stack_top = 0;          // argc = 0
+  
+  _RegSet *tf = (void*)stack_top - sizeof(_RegSet);
+  tf->eflags = 0x2 | FL_IF;
+  tf->cs = 8;
+  tf->eip = (uint32_t)entry;
+  
+  return (_RegSet *)tf;
+}
