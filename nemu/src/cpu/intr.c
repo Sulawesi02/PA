@@ -10,11 +10,12 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   //依次将 EFLAGS，CS，EIP 寄存器的值压入栈中
   memcpy(&t1, &cpu.eflags, sizeof(cpu.eflags));
   rtl_li(&t0, t1);
-  rtl_push(&t0);
+  rtl_push(&t0);// 将 EFLAGS 寄存器的值压入栈中
+  cpu.eflags.IF = 0;// 清除IF位，使处理器进⼊关中断状态
   t0 = cpu.cs;
-  rtl_push(&t0);
+  rtl_push(&t0);// 将 CS 寄存器的值压入栈中
   rtl_li(&t0, ret_addr);
-  rtl_push(&t0);
+  rtl_push(&t0);// 将 EIP 寄存器的值压入栈中
 
   // 读取 IDTR 寄存器中的 IDT 的首地址
   uint32_t idtr_base = cpu.idtr.base;
@@ -32,4 +33,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  cpu.INTR = true;
 }
