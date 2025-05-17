@@ -86,5 +86,19 @@ void _unmap(_Protect *p, void *va) {
 }
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  return NULL;
+  // 在用户栈底部构造陷阱帧
+  uint32_t *stack_top = (uint32_t*)ustack.end;
+  
+  // 为_start()创建参数占位空间（argc, argv, envp）
+  *--stack_top = 0;          // envp = NULL
+  *--stack_top = 0;          // argv = NULL
+  *--stack_top = 0;          // argc = 0
+  
+
+  _RegSet *tf = (void*)stack_top - sizeof(_RegSet);
+  tf->eflags = 0x2 | FL_IF;
+  tf->cs = 8;
+  tf->eip = (uint32_t)entry;
+  
+  return (_RegSet *)tf;
 }
