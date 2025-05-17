@@ -67,9 +67,8 @@ make_EHelper(cltd) {
   else {
     //TODO();
     // cltd:将EAX符号扩展到EDX:EAX
-    t0 = reg_l(0); // 获取EAX
-    rtl_sext(&t0, &t0, 4); // EAX符号扩展
-    reg_l(2) = (uint32_t) ((uint64_t)t0 >> 32); // 取高32位给EDX
+    uint32_t a = reg_l(0); // 获取EAX
+    reg_l(2) = (a & 0x80000000) ? 0xFFFFFFFF : 0; // 根据符号位设置EDX
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
