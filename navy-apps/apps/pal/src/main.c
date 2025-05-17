@@ -553,7 +553,7 @@ main_loop() {
    // Show the trademark screen and splash screen
    //
    // TODO: should we display these?
-   // PAL_TrademarkScreen();
+   PAL_TrademarkScreen();
    PAL_SplashScreen();
 
    //
