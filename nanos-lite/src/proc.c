@@ -38,7 +38,6 @@ _RegSet* schedule(_RegSet *prev) {
   // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   static int count = 0;
   static const int max_count = 1000;
-  Log("current_game = %d\n",current_game);
 
   if(current == &pcb[current_game]){
     //打印当前游戏名以及运行次数
@@ -47,14 +46,14 @@ _RegSet* schedule(_RegSet *prev) {
     else if(current_game == 2)
       Log("run videotest %d\n",count);
     count++;
-    if(count == max_count){
-      count = 0;
-      current = &pcb[1];
-      Log("run hello \n");
-    }
   }
   else if(current == &pcb[1]){
     current = &pcb[current_game];
+  }
+  if(count == max_count){
+    count = 0;
+    current = &pcb[1];
+    Log("run hello \n");
   }
 
   _switch(&current->as);
