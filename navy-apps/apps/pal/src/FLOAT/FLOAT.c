@@ -3,13 +3,16 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  assert(0);
-  return 0;
+  return (int64_t)a * (int64_t)b >> 16;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  assert(0);
-  return 0;
+  assert(b != 0);
+  FLOAT result = ((int64_t)a << 16) / (int64_t)b;
+  if((a ^ b) < 0){
+    result = -result;
+  }
+  return result;
 }
 
 FLOAT f2F(float a) {
@@ -23,13 +26,41 @@ FLOAT f2F(float a) {
    * performing arithmetic operations on it directly?
    */
 
-  assert(0);
-  return 0;
+  union float_ {
+    struct {
+      uint32_t m : 23;
+      uint32_t e : 8;
+      uint32_t s : 1;
+    };
+    uint32_t value;
+  } f;
+  f.value = *(uint32_t*)&a;
+  
+  int exponent = f.e - 127;// 真值
+  uint32_t mantissa = f.m | (1 << 23);// 加上隐含最高位1的尾数
+
+  FLOAT result;
+  int shift = exponent + 16 - 23;
+  if (shift >= 0) {
+    result = mantissa << shift;
+  } else {
+    result = mantissa >> (-shift);
+  }
+
+  if (f.s == 1) {
+    result = -result;
+  }
+
+  return result;
 }
 
 FLOAT Fabs(FLOAT a) {
-  assert(0);
-  return 0;
+  if(a < 0){
+    return -a;
+  }
+  else{
+    return a;
+  }
 }
 
 /* Functions below are already implemented */
