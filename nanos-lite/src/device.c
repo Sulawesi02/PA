@@ -21,10 +21,10 @@ size_t events_read(void *buf, size_t len) {
   }
   else {
     sprintf(buf, "%s %s\n", is_down?"kd":"ku", keyname[key]);//按键事件
-    if(key == _KEY_F12 && is_down){// 按下F12，切换游戏
-      current_game = (current_game == 0 ? 2 : 0);
-      Log("切换游戏到 %s", current_game ? "videotest" : "pal");
-    }  
+    // if(key == _KEY_F12 && is_down){// 按下F12，切换游戏
+    //   current_game = (current_game == 0 ? 2 : 0);
+    //   Log("切换游戏到 %s", current_game ? "videotest" : "pal");
+    // }  
   }
   return strlen(buf);
 }
