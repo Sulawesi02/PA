@@ -28,34 +28,36 @@ void load_prog(const char *filename) {
 
 int current_game = 0; // 当前游戏的进程号
 _RegSet* schedule(_RegSet *prev) {
-  if(current!=NULL){
-    current->tf=prev;
-  }
-  else{
-    current=&pcb[current_game];
-  }
-  // current = &pcb[0];
-  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  static int count = 0;
-  static const int max_count = 1000;
-
-  if(current == &pcb[current_game]){
-    //打印当前游戏名以及运行次数
-    if(current_game==0)
-      Log("run pal %d\n",count);
-    else if(current_game==2)
-      Log("run videotest %d\n",count);
-    count++;
-    if(count == max_count){
-      count = 0;
-      current = &pcb[1];
-      Log("run hello \n");
+    //return NULL;
+    if(current!=NULL)
+    {
+      current->tf=prev;
     }
+    else
+    {
+      current=&pcb[current_game];
+    }
+    static int num=0;
+    static const int frequent=100;
+    if(current==&pcb[current_game])
+    {
+        if(current_game==0)
+          Log("run pal %d\n",num);
+        else if(current_game==2)
+          Log("run videotest %d\n",num);
+         num++;
+    }
+    else
+    {
+      current=&pcb[current_game];
+    }
+    if(num==frequent)
+    {
+      current=&pcb[1];
+      Log("run hello \n");
+      num=0;
+    }
+    _switch(&current->as);//切换地址空间
+    //返回上下文
+     return current->tf;
   }
-  else if(current == &pcb[1]){
-    current = &pcb[current_game];
-  }
-
-  _switch(&current->as);
-  return current->tf;
-}
