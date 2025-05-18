@@ -26,28 +26,45 @@ void load_prog(const char *filename) {
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
 
-int current_game = 0; // 当前游戏的进程号
-_RegSet* schedule(_RegSet *prev) {
-  current->tf = prev;
-  // current = &pcb[0];
-  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  static int count = 0;
-  static const int max_count = 1000;
-
-  if(current == &pcb[current_game]){
-    //打印当前游戏名以及运行次数
-    Log("game: %s, count: %d", current_game == 0? "pal" : "videotest", count);
-    count++;
-    if(count == max_count){
-      count = 0;
-      current = &pcb[1];
-      Log("run hello \n");
-    }
-  }
-  else if(current == &pcb[1]){
-    current = &pcb[current_game];
-  }
-
-  _switch(&current->as);
-  return current->tf;
+int current_game=0;
+void switch_current_game()
+{
+    current_game=2-current_game;
+    //0 仙剑 2 videotest
+    Log("current_game=%d",current_game);
 }
+
+_RegSet* schedule(_RegSet *prev) {
+    //return NULL;
+    if(current!=NULL)
+    {
+      current->tf=prev;
+    }
+    else
+    {
+      current=&pcb[current_game];
+    }
+    static int num=0;
+    static const int frequent=100;
+    if(current==&pcb[current_game])
+    {
+        if(current_game==0)
+          Log("run pal %d\n",num);
+        else if(current_game==2)
+          Log("run videotest %d\n",num);
+         num++;
+    }
+    else
+    {
+      current=&pcb[current_game];
+    }
+    if(num==frequent)
+    {
+      current=&pcb[1];
+      Log("run hello \n");
+      num=0;
+    }
+    _switch(&current->as);//切换地址空间
+    //返回上下文
+     return current->tf;
+  }
