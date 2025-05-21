@@ -7,25 +7,12 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  int sign = 1;
-    FLOAT dividend, divisor, quotient, remainder;
-
-    if (a < 0) { sign = -sign; dividend = -a; } else { dividend = a; }
-    if (b < 0) { sign = -sign; divisor = -b; } else { divisor = b; }
-
-    quotient = dividend / divisor;
-    remainder = dividend % divisor;
-	int i;
-    for (i = 0; i < 16; i++) {
-        remainder <<= 1;
-        quotient <<= 1;
-        if (remainder >= divisor) {
-            remainder -= divisor;
-            quotient++;
-        }
-    }
-
-    return sign * quotient;
+  assert(b != 0);
+  FLOAT result = (a << 16) / b;
+  if((a ^ b) < 0){
+    result = -result;
+  }
+  return result;
 }
 
 FLOAT f2F(float a) {
