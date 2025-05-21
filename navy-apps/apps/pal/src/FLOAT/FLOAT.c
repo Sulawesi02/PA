@@ -7,6 +7,7 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
+  printf("a: %d, b: %d\n", a, b);
   assert(b != 0);
   return a / b << 16;
 }
