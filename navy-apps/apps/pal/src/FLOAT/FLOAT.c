@@ -3,12 +3,12 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  return (int64_t)a * (int64_t)b >> 16;
+  return a * b >> 16;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
   assert(b != 0);
-  FLOAT result = ((int64_t)a << 16) / (int64_t)b;
+  FLOAT result = (a << 16) / b;
   if((a ^ b) < 0){
     result = -result;
   }
