@@ -3,13 +3,12 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  return a * b >> 16;
+  return (uint64_t)a * (uint64_t)b >> 16;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  printf("a: %d, b: %d\n", a, b);
   assert(b != 0);
-  return a / b << 16;
+  return (uint64_t)a / (uint64_t)b << 16;
 }
 
 FLOAT f2F(float a) {
@@ -66,9 +65,7 @@ FLOAT Fsqrt(FLOAT x) {
   FLOAT dt, t = int2F(2);
 
   do {
-    printf("333");
     dt = F_div_int((F_div_F(x, t) - t), 2);
-    printf("444");
     t += dt;
   } while(Fabs(dt) > f2F(1e-4));
 
@@ -81,9 +78,7 @@ FLOAT Fpow(FLOAT x, FLOAT y) {
 
   do {
     t2 = F_mul_F(t, t);
-    printf("555");
     dt = (F_div_F(x, t2) - t) / 3;
-    printf("666");
     t += dt;
   } while(Fabs(dt) > f2F(1e-4));
 
