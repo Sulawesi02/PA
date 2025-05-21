@@ -8,7 +8,7 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
   assert(b != 0);
-  return (uint64_t)a / (uint64_t)b << 16;
+  return a / b << 16;
 }
 
 FLOAT f2F(float a) {
@@ -84,3 +84,4 @@ FLOAT Fpow(FLOAT x, FLOAT y) {
 
   return t;
 }
+
