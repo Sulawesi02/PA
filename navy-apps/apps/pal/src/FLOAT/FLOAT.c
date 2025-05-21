@@ -8,11 +8,7 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
   assert(b != 0);
-  FLOAT result = (a << 16) / b;
-  if((a ^ b) < 0){
-    result = -result;
-  }
-  return result;
+  return a / b << 16;
 }
 
 FLOAT f2F(float a) {
