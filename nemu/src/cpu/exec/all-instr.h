@@ -50,6 +50,8 @@ make_EHelper(rol);
 make_EHelper(setcc);
 make_EHelper(not);
 make_EHelper(rol);
+make_EHelper(shld);
+make_EHelper(shrd);
 
 // prefix.c
 make_EHelper(operand_size);
