@@ -79,20 +79,11 @@ FLOAT Fabs(FLOAT a) {
 
 FLOAT Fsqrt(FLOAT x) {
   FLOAT dt, t = int2F(2);
-  printf("Fsqrt_x = %d\n", x);
-  printf("Fsqrt_dt = %d\n", dt);
-  printf("Fsqrt_t = %d\n", t);
 
   do {
     dt = F_div_int((F_div_F(x, t) - t), 2);
-    printf("Fsqrt_while_dt = %d\n", dt);
     t += dt;
-    printf("Fsqrt_while_t = %d\n", t);
-    printf("Fabs(dt) = %d\n", Fabs(dt));
-    printf("f2F(1e-4) = %d\n", f2F(1e-4));
   } while(Fabs(dt) > f2F(1e-4));
-
-  printf("Fsqrt_while_break\n");
 
   return t;
 }
@@ -100,22 +91,12 @@ FLOAT Fsqrt(FLOAT x) {
 FLOAT Fpow(FLOAT x, FLOAT y) {
   /* we only compute x^0.333 */
   FLOAT t2, dt, t = int2F(2);
-  printf("Fpow_x = %d\n", x);
-  printf("Fpow_dt = %d\n", dt);
-  printf("Fpow_t = %d\n", t);
 
   do {
     t2 = F_mul_F(t, t);
-    printf("Fpow_while_t2 = %d\n", t2);
     dt = (F_div_F(x, t2) - t) / 3;
-    printf("Fpow_while_dt = %d\n", dt);
     t += dt;
-    printf("Fpow_while_t = %d\n", t);
-    printf("Fabs(dt) = %d\n", Fabs(dt));
-    printf("f2F(1e-4) = %d\n", f2F(1e-4));
   } while(Fabs(dt) > f2F(1e-4));
-
-  printf("Fpow_while_break\n");
 
   return t;
 }
