@@ -51,13 +51,21 @@ PAL_Init(
 )
 /*++
   Purpose:
+
     Initialize everything needed by the game.
+
   Parameters:
+
     [IN]  wScreenWidth - width of the screen.
+
     [IN]  wScreenHeight - height of the screen.
+
     [IN]  fFullScreen - TRUE to use full screen mode, FALSE to use windowed mode.
+
   Return value:
+
     None.
+
 --*/
 {
    int           e;
@@ -162,11 +170,17 @@ PAL_Shutdown(
 )
 /*++
   Purpose:
+
     Free everything needed by the game.
+
   Parameters:
+
     None.
+
   Return value:
+
     None.
+
 --*/
 {
    SOUND_CloseAudio();
@@ -204,11 +218,17 @@ PAL_TrademarkScreen(
 )
 /*++
   Purpose:
+
     Show the trademark screen.
+
   Parameters:
+
     None.
+
   Return value:
+
     None.
+
 --*/
 {
    PAL_SetPalette(3, FALSE);
@@ -223,11 +243,17 @@ PAL_SplashScreen(
 )
 /*++
   Purpose:
+
     Show the splash screen.
+
   Parameters:
+
     None.
+
   Return value:
+
     None.
+
 --*/
 {
    SDL_Color     *palette = PAL_GetPalette(1, FALSE);

@@ -3,29 +3,29 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-    return (uint64_t)a * (uint64_t)b >> 16;
-  }
+  return (uint64_t)a * (uint64_t)b >> 16;
+}
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-    assert(b != 0);
-    FLOAT x = Fabs(a);
-    FLOAT y = Fabs(b);
-    FLOAT ret = x / y;
-    x = x % y;
-    //处理低16位
-    for (int i = 0; i < 16; i++) {
-      x <<= 1;
-      ret <<= 1;
-      if (x >= y) {
-        x -= y;
-        ret++;
-      }
+  assert(b != 0);
+  FLOAT x = Fabs(a);
+  FLOAT y = Fabs(b);
+  FLOAT ret = x / y;
+  x = x % y;
+  //处理低16位
+  for (int i = 0; i < 16; i++) {
+    x <<= 1;
+    ret <<= 1;
+    if (x >= y) {
+      x -= y;
+      ret++;
     }
-    if (((a ^ b) & 0x80000000) == 0x80000000) {
-      ret = -ret;
-    }
-    return ret;
   }
+  if (((a ^ b) & 0x80000000) == 0x80000000) {
+    ret = -ret;
+  }
+  return ret;
+}
 
 FLOAT f2F(float a) {
   /* You should figure out how to convert `a' into FLOAT without
@@ -38,7 +38,7 @@ FLOAT f2F(float a) {
    * performing arithmetic operations on it directly?
    */
 
-  union float_ {
+   union float_ {
     struct {
       uint32_t m : 23;
       uint32_t e : 8;
@@ -100,3 +100,4 @@ FLOAT Fpow(FLOAT x, FLOAT y) {
 
   return t;
 }
+
