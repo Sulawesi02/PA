@@ -257,7 +257,7 @@ make_DHelper(Ib_G2E) {
   decode_op_I(eip, id_src, true);
 }
 
-make_DHelper(Cl_G2E) {
+make_DHelper(cl_G2E) {
   decode_op_rm(eip, id_dest, true, id_src2, true);
   id_src->type = OP_TYPE_REG;
   id_src->reg = R_CL;
